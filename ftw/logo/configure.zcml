@@ -7,6 +7,8 @@
 
     <five:registerPackage package="." initialize=".initialize" />
 
+    <include package=".browser" />
+
     <genericsetup:registerProfile
         name="default"
         title="ftw.logo default"
@@ -16,7 +18,7 @@
 
     <genericsetup:registerProfile
         name="uninstall"
-        title="ftw.logo : uninstall"
+        title="ftw.logo:uninstall"
         directory="profiles/uninstall"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
