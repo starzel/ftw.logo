@@ -30,4 +30,5 @@
         directory="upgrades"
         />
 
+    <adapter factory=".logo.Logo" />
 </configure>

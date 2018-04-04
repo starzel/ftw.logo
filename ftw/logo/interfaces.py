@@ -6,6 +6,22 @@ class IFtwLogo(Interface):
     """
 
 
+class ILogo(Interface):
+    """ Public interface for getting logo scales
+    """
+
+    def __init__(context, request):
+        """Adapts context and request"""
+
+    def get_base_logo():
+        """
+        """
+
+    def get_base_icon():
+        """
+        """
+
+
 class IIconConfig(Interface):
     """Adapter interface for logo customization adapter.
     """
