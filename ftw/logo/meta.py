@@ -48,7 +48,7 @@ def registerLogo(_context, **kwargs):
                 kwargs.get('layer', Interface))
 
     _context.action(
-        discriminator=('name',) + requires,
+        discriminator=('logo:logo',) + requires,
         callable=handler,
         args=('registerAdapter', adapter_factory, requires, ILogoConfig, ''))
 
@@ -63,6 +63,6 @@ def registerIcon(_context, **kwargs):
                 kwargs.get('layer', Interface))
 
     _context.action(
-        discriminator=('name',) + requires,
+        discriminator=('logo:icon',) + requires,
         callable=handler,
         args=('registerAdapter', adapter_factory, requires, IIconConfig, ''))
