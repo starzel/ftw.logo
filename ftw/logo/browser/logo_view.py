@@ -28,13 +28,11 @@ class LogoView(BrowserView):
         self.config = None
 
     def publishTraverse(self, request, name):
-        if name in CONFIGS:
+        if self.config is None and name in CONFIGS:
             self.config = CONFIGS[name]
             return self
         elif self.config and name in SCALES:
             self.scale = name
-            return self
-        elif self.config and self.scale:
             return self
         else:
             raise NotFound()

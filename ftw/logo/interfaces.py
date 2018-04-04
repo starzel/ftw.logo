@@ -13,13 +13,8 @@ class ILogo(Interface):
     def __init__(context, request):
         """Adapts context and request"""
 
-    def get_base_logo():
-        """
-        """
-
-    def get_base_icon():
-        """
-        """
+    def get_config(config_type):
+        """Get config based on config_type"""
 
 
 class IIconConfig(Interface):
