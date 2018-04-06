@@ -3,7 +3,7 @@ from ftw.testbrowser import browsing
 from unittest import skip
 
 
-class TestViewlet(FunctionalTestCase):
+class TestIconViewlet(FunctionalTestCase):
 
     @skip("TODO: Remove defualt viewport from sunburst default template")
     @browsing

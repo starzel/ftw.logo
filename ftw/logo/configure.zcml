@@ -3,6 +3,8 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:upgrade-step="http://namespaces.zope.org/ftw.upgrade"
+    xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
+    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="ftw.logo">
 
     <five:registerPackage package="." initialize=".initialize" />
@@ -29,5 +31,16 @@
         profile="ftw.logo:default"
         directory="upgrades"
         />
+
+    <adapter factory=".logo.Logo" />
+
+    <browser:page
+      name="logo"
+      class=".browser.logo_view.LogoView"
+      permission="zope2.Public"
+      for="plone.app.layout.navigation.interfaces.INavigationRoot" />
+
+    <logo:logo base="resources/logo.png" />
+    <logo:icon base="resources/icon.png" />
 
 </configure>
