@@ -3,21 +3,28 @@ from ftw.logo.interfaces import ILogoConfig
 from zope.interface import implements
 
 
-class LogoConfig(object):
+class AbstractConfig(object):
+
+    def __init__(self, base):
+        self.base = base
+        self.scales = {}
+
+    def add_scale(self, name, scale):
+        self.scales[name] = scale
+
+    def get_scale(self, name):
+        return self.scales[name]
+
+
+class LogoConfig(AbstractConfig):
     """Logo config entry.
     """
 
     implements(ILogoConfig)
 
-    def __init__(self, base):
-        self.base = base
 
-
-class IconConfig(object):
+class IconConfig(AbstractConfig):
     """Icon config entry.
     """
 
     implements(IIconConfig)
-
-    def __init__(self, base):
-        self.base = base

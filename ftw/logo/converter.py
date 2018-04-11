@@ -44,21 +44,32 @@ def make_ico_converter():
     return converter
 
 
+def flatten_scales(scales):
+    merged = scales['LOGOS'].copy()
+    merged.update(scales['ICONS'])
+    return merged
+
+
 SCALES = {
-    'APPLE_TOUCH_ICON': make_resizer(180, 180),
-    'FAVICON_32X32':    make_resizer(32, 32),
-    'FAVICON_16X16':    make_resizer(16, 16),
-    'MSTILE_150X150':   make_resizer(150, 150),
-    'ANDROID_192X192':  make_resizer(192, 192),
-    'ANDROID_512X512':  make_resizer(512, 512),
-    'FAVICON':          make_ico_converter(),
-    'LOGO':             make_transformer(height=80),
-    'MOBILE_LOGO':      make_transformer(height=50),
-    'BASE':             make_raw(),
+    'LOGOS': {
+        'LOGO':             make_transformer(height=80),
+        'MOBILE_LOGO':      make_transformer(height=50),
+        'BASE':             make_raw(),
+    },
+    'ICONS': {
+        'APPLE_TOUCH_ICON': make_resizer(180, 180),
+        'FAVICON_32X32':    make_resizer(32, 32),
+        'FAVICON_16X16':    make_resizer(16, 16),
+        'MSTILE_150X150':   make_resizer(150, 150),
+        'ANDROID_192X192':  make_resizer(192, 192),
+        'ANDROID_512X512':  make_resizer(512, 512),
+        'FAVICON':          make_ico_converter(),
+    }
 }
 
 
 def convert(source, scale):
-    if scale not in SCALES:
+    scales = flatten_scales(SCALES)
+    if scale not in scales:
         raise Exception('scale: {} is not supported'.format(scale))
-    return SCALES[scale](source)
+    return scales[scale](source)
