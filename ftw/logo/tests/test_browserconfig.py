@@ -8,7 +8,7 @@ class TestBrowserconfigView(FunctionalTestCase):
     def test_browserconfig_view(self, browser):
         browser.login().visit(self.portal, view='browserconfig.xml')
         self.assertEqual('text/xml', browser.mimetype)
-        self.assertEqual(
+        self.assertMultiLineEqual(
             '<?xml version="1.0" encoding="utf-8"?>'
             '<browserconfig>'
             '<msapplication>'

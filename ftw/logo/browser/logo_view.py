@@ -1,6 +1,9 @@
+from ftw.logo.converter import SCALES
+from ftw.logo.converter import flatten_scales
 from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogo
 from ftw.logo.interfaces import ILogoConfig
+from ftw.logo.StringIOStreamIterator import StringIOStreamIterator
 from plone.app.layout.globals.interfaces import IViewView
 from Products.Five.browser import BrowserView
 from zExceptions import BadRequest
@@ -8,7 +11,6 @@ from zExceptions import NotFound
 from zope.component import getMultiAdapter
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
-from ZPublisher.Iterators import filestream_iterator
 import mimetypes
 
 
@@ -16,7 +18,6 @@ CONFIGS = {
     'logo': ILogoConfig,
     'icon': IIconConfig,
 }
-SCALES = ('base',)
 
 
 @implementer(IPublishTraverse, IViewView)
@@ -31,7 +32,7 @@ class LogoView(BrowserView):
         if self.config is None and name in CONFIGS:
             self.config = CONFIGS[name]
             return self
-        elif self.config and name in SCALES:
+        elif self.config and name in flatten_scales(SCALES):
             self.scale = name
             return self
         else:
@@ -40,12 +41,13 @@ class LogoView(BrowserView):
     def __call__(self):
         if not self.config or not self.scale:
             raise BadRequest()
-        path = getattr(getMultiAdapter((self.context, self.request),
-                                       ILogo).get_config(self.config), self.scale)
+        config = getMultiAdapter(
+            (self.context, self.request), ILogo).get_config(self.config)
+        scale = config.get_scale(self.scale)
         response = self.request.response
-        contenttype = mimetypes.guess_type(
-            path)[0] or 'application/octet-stream'
-        file_iterator = filestream_iterator(path)
+        iterator = StringIOStreamIterator(scale.make_blob())
+        contenttype = mimetypes.types_map.get('.{}'.format(
+            scale.extension), 'application/octet-stream')
         response.setHeader('Content-Type', contenttype)
-        response.setHeader('Content-Length', file_iterator.__len__())
-        return file_iterator
+        response.setHeader('Content-Length', iterator.len)
+        return iterator

@@ -15,5 +15,5 @@ class TestLogoViewlet(FunctionalTestCase):
 
         self.assertEqual(
             map(lambda x: x.attrib['src'], browser.css('.portal-logo > img')),
-            ['http://nohost/plone/@@logo/logo/base'],
+            ['http://nohost/plone/@@logo/logo/BASE'],
         )
