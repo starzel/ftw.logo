@@ -48,6 +48,8 @@ class LogoView(BrowserView):
         iterator = StringIOStreamIterator(scale.make_blob())
         contenttype = mimetypes.types_map.get('.{}'.format(
             scale.extension), 'application/octet-stream')
-        response.setHeader('Content-Type', contenttype)
+        response.setHeader('X-Theme-Disabled', 'True')
+        response.setHeader(
+            'Content-Type', '{}; charset=utf-8'.format(contenttype))
         response.setHeader('Content-Length', iterator.len)
         return iterator
