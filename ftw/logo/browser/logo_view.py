@@ -49,7 +49,13 @@ class LogoView(BrowserView):
         contenttype = mimetypes.types_map.get('.{}'.format(
             scale.extension), 'application/octet-stream')
         response.setHeader('X-Theme-Disabled', 'True')
+        charset = '' if contenttype == 'application/octet-stream' else 'charset=utf-8'
         response.setHeader(
-            'Content-Type', '{}; charset=utf-8'.format(contenttype))
+            'Content-Type', '{}; {}'.format(contenttype, charset))
         response.setHeader('Content-Length', iterator.len)
+        if self.request.get('r'):
+            # Do not set cache headers when no cachekey provided.
+            # The cached representation is to be considered fresh for 1 year
+            # http://stackoverflow.com/a/3001556/880628
+            response.setHeader('Cache-Control', 'public, max-age=31536000')
         return iterator

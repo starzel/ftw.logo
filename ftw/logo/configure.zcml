@@ -19,6 +19,13 @@
         />
 
     <genericsetup:registerProfile
+        name="caching"
+        title="ftw.logo caching"
+        directory="profiles/caching"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:registerProfile
         name="uninstall"
         title="ftw.logo:uninstall"
         directory="profiles/uninstall"
@@ -33,6 +40,11 @@
         />
 
     <adapter factory=".logo.Logo" />
+
+    <adapter
+      factory=".logo.LogoViewletETagValue"
+      name="logo-viewlet"
+      />
 
     <browser:page
       name="logo"

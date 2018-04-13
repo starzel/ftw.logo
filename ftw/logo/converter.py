@@ -34,6 +34,7 @@ def make_ico_converter():
         scales = map(lambda resizer: resizer(src), ICO_SCALES)
 
         def merge_scales(first, other):
+            first.format = 'ico'
             first.append(other)
             return first
 

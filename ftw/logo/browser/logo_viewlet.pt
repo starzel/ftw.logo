@@ -5,7 +5,7 @@
 
 <a tal:attributes="href view/navigation_root_url"
    class="portal-logo">
-   <img tal:attributes="src string:${view/portal_url}/@@logo/logo/BASE" />
+   <img tal:attributes="src string:${view/navigation_root_url}/@@logo/logo/BASE?r=${view/cachekey}" />
 </a>
 
 </html>

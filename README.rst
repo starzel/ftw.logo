@@ -39,6 +39,15 @@ Run ``bin/test`` to test your changes.
 Or start an instance by running ``bin/instance fg``.
 
 
+Caching
+=======
+
+Caching is provided by adding a query string parameter to every logo request.
+The cachekey consist of a sha256 hash including the files binary data.
+If you have plone.app.caching enabled, install the `caching` profile from ftw.logo.
+This will define etag values so the viewlet is cached properly.
+
+
 Links
 =====
 

@@ -1,5 +1,5 @@
 from Products.Five.browser import BrowserView
-from plone import api
+from zope.component import getMultiAdapter
 
 
 BROWSERCONFIG_TEMPLATE = '''
@@ -18,8 +18,10 @@ BROWSERCONFIG_TEMPLATE = '''
 class BrowserconfigView(BrowserView):
 
     def __call__(self):
-        portal_url = api.portal.get().absolute_url()
+        portal_state = getMultiAdapter((self.context, self.request),
+                                       name=u'plone_portal_state')
+        navigation_root_url = portal_state.navigation_root_url()
         response = self.request.response
         response.setHeader('Content-Type', 'text/xml')
 
-        return BROWSERCONFIG_TEMPLATE.replace('\n', '').format(portal_url)
+        return BROWSERCONFIG_TEMPLATE.replace('\n', '').format(navigation_root_url)
