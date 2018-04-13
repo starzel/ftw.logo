@@ -37,10 +37,7 @@ def make_ico_converter():
             first.append(other)
             return first
 
-        ico = reduce(merge_scales, scales)
-
-        ico.format = 'ico'
-        return ico
+        return reduce(merge_scales, scales)
     return converter
 
 
