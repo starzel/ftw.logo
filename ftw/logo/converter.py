@@ -64,6 +64,7 @@ SCALES = {
         'ANDROID_192X192':  make_resizer(192, 192),
         'ANDROID_512X512':  make_resizer(512, 512),
         'FAVICON':          make_ico_converter(),
+        'BASE':             make_raw(),
     }
 }
 

@@ -6,12 +6,12 @@ class TestLogoView(FunctionalTestCase):
 
     @browsing
     def test_logo_view(self, browser):
-        browser.login().visit(self.portal, view='@@logo/logo/base')
+        browser.login().visit(self.portal, view='@@logo/logo/BASE')
         self.assertEqual(200, browser.status_code)
 
     @browsing
     def test_icon_view(self, browser):
-        browser.login().visit(self.portal, view='@@logo/logo/base')
+        browser.login().visit(self.portal, view='@@logo/icon/BASE')
         self.assertEqual(200, browser.status_code)
 
     @browsing

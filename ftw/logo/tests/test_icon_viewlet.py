@@ -21,7 +21,7 @@ class TestIconViewlet(FunctionalTestCase):
         browser.login().visit(self.portal)
 
         self.assertEqual(
-            [{'href': '/apple-touch-icon.png', 'sizes': '180x180'}],
+            [{'href': 'http://nohost/plone/@@logo/icon/APPLE_TOUCH_ICON', 'sizes': '180x180'}],
             map(lambda x: {
                 'href': x.attrib['href'],
                 'sizes': x.attrib['sizes'],
@@ -33,17 +33,17 @@ class TestIconViewlet(FunctionalTestCase):
                 {
                     'type': 'image/png',
                     'sizes': '32x32',
-                    'href': '/favicon-32x32.png',
+                    'href': 'http://nohost/plone/@@logo/icon/FAVICON_32X32',
                 },
                 {
                     'type': 'image/png',
                     'sizes': '16x16',
-                    'href': '/favicon-16x16.png',
+                    'href': 'http://nohost/plone/@@logo/icon/FAVICON_16X16',
                 },
                 {
                     'type': '',
                     'sizes': '',
-                    'href': '/favicon.ico',
+                    'href': 'http://nohost/plone/@@logo/icon/FAVICON',
                 },
             ],
             map(lambda x: {
@@ -54,13 +54,13 @@ class TestIconViewlet(FunctionalTestCase):
         )
 
         self.assertEqual(
-            ['/manifest.json'],
+            ['http://nohost/plone/manifest.json'],
             map(lambda x: x.attrib['href'], browser.css(
                 'link[rel="manifest"]'))
         )
 
         self.assertEqual(
-            ['/browserconfig.xml'],
+            ['http://nohost/plone/browserconfig.xml'],
             map(lambda x: x.attrib['content'], browser.css(
                 'meta[name="msapplication-config"]'))
         )
