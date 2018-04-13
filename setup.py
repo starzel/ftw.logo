@@ -47,6 +47,7 @@ setup(
         'Plone',
         'setuptools',
         'ftw.upgrade',
+        'wand',
     ],
 
     tests_require=tests_require,
