@@ -48,6 +48,7 @@ setup(
         'setuptools',
         'ftw.upgrade',
         'wand',
+        'plone.api',
     ],
 
     tests_require=tests_require,

@@ -40,6 +40,18 @@
       permission="zope2.Public"
       for="plone.app.layout.navigation.interfaces.INavigationRoot" />
 
+    <browser:page
+      name="manifest.json"
+      class=".browser.webmanifest_view.WebmanifestView"
+      permission="zope2.Public"
+      for="plone.app.layout.navigation.interfaces.INavigationRoot" />
+
+    <browser:page
+      name="browserconfig.xml"
+      class=".browser.browserconfig_view.BrowserconfigView"
+      permission="zope2.Public"
+      for="plone.app.layout.navigation.interfaces.INavigationRoot" />
+
     <logo:logo base="resources/logo.svg" />
     <logo:icon base="resources/logo.svg" />
 
