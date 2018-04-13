@@ -30,7 +30,8 @@ class TestCollecter(TestCase):
         component = IconConfig(source)
         collect_icons(component)
 
-        self.assertEqual(len(component.scales), 7, 'Should store seven scales')
+        self.assertEqual(len(component.scales), 8, 'Should store eight scales')
+        self.assertImage(component.get_scale('BASE'), 1, 1, 'svg')
         self.assertImage(component.get_scale('APPLE_TOUCH_ICON'), 180, 180, 'png')
         self.assertImage(component.get_scale('FAVICON_32X32'), 32, 32, 'png')
         self.assertImage(component.get_scale('FAVICON_16X16'), 16, 16, 'png')
