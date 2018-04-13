@@ -53,6 +53,6 @@
       for="plone.app.layout.navigation.interfaces.INavigationRoot" />
 
     <logo:logo base="resources/logo.svg" />
-    <logo:icon base="resources/logo.svg" />
+    <logo:icon base="resources/icon.svg" />
 
 </configure>
