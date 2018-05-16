@@ -54,3 +54,5 @@ class TestConverter(TestCase):
 
         self.assertImage(
             img.sequence[2], 48, 48)
+
+        img.close()
