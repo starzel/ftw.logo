@@ -49,7 +49,7 @@ Scales
 
 Basically there are just logo and icon scales.
 The logo scales are mostly used on the top right and can have
-any dimensions. The converter creates a `logo` and` mobile_logo` out of the
+any dimensions. The converter creates a ``logo`` and ``mobile_logo`` out of the
 base logo which has to be an svg file.
 The icon scales are used for ``apple_touch_icons``, ``favicons`` or ``andoird PWA icons``.
 The icons are square as well as the source.
@@ -111,13 +111,13 @@ Logo View
 =========
 
 All logos and icons can be access through the logo browser view.
-The URL consist of the browser view name ``@@logo`` follow by the type of the
+The URL consists of the browser view name ``@@logo`` followed by the type of the
 image and the actual scale.
 
 Examples:
 
-``@@logo/logo/BASE`` this will give the svg logo source.
-``@@logo/icon/APPLE_TOUCH_ICON`` this will give apple touch icon as a png image.
+- ``@@logo/logo/BASE`` this will give the svg logo source.
+- ``@@logo/icon/APPLE_TOUCH_ICON`` this will give apple touch icon as a png image.
 
 Caching
 =======
