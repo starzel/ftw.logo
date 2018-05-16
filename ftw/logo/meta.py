@@ -9,7 +9,18 @@ from zope.configuration import fields
 from zope.configuration.fields import GlobalInterface
 from zope.interface import Interface
 
+def add_scale_fields(key):
+    def decorator(klass):
+        for name in SCALES[key]:
+            field = fields.Path(title=name.decode('utf-8'), required=False)
+            # It's not possible to dymanmically set attributes with setattr because
+            # The InterfaceClass has it's own dict for storing the schema fields
+            klass._InterfaceClass__attrs[name.lower()] = field
+        return klass
+    return decorator
 
+
+@add_scale_fields('LOGOS')
 class ILogoDirective(Interface):
 
     for_ = GlobalInterface(
@@ -25,6 +36,7 @@ class ILogoDirective(Interface):
         required=True)
 
 
+@add_scale_fields('ICONS')
 class IIconDirective(Interface):
 
     for_ = GlobalInterface(
