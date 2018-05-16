@@ -34,13 +34,11 @@ def make_ico_converter():
         scales = map(lambda resizer: resizer(src), ICO_SCALES)
 
         def merge_scales(first, other):
+            first.format = 'ico'
             first.append(other)
             return first
 
-        ico = reduce(merge_scales, scales)
-
-        ico.format = 'ico'
-        return ico
+        return reduce(merge_scales, scales)
     return converter
 
 

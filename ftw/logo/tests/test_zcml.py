@@ -3,16 +3,16 @@ from ftw.logo.interfaces import ILogoConfig
 from ftw.logo.testing import META_ZCML
 from unittest2 import TestCase
 from zope.component import getMultiAdapter
-from zope.interface.verify import verifyObject
-from zope.interface import Interface
 from zope.interface import implementer
+from zope.interface import Interface
+from zope.interface.verify import verifyObject
 import os
 
 
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
 logo = os.path.join(source_path, 'logo.svg')
 icon = os.path.join(source_path, 'logo.svg')
-custom = os.path.join(source_path, 'logo.svg')
+custom = os.path.join(source_path, 'custom.svg')
 
 
 class IDummyLayer(Interface):
@@ -63,7 +63,7 @@ class TestZCML(TestCase):
             '<configure ',
             '    xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"',
             '    i18n_domain="my.package"',
-            '    package="ftw.logo.tests"''>',
+            '    package="ftw.logo.tests">',
         ) + lines + (
             '</configure>',
         )))

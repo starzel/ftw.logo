@@ -1,3 +1,4 @@
+from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 from unittest import skip
@@ -18,10 +19,13 @@ class TestIconViewlet(FunctionalTestCase):
 
     @browsing
     def test_logo_viewlet_displays_relevant_metadata_in_header(self, browser):
+        etag = get_etag_value_for(self.portal, self.request)
         browser.login().visit(self.portal)
 
         self.assertEqual(
-            [{'href': 'http://nohost/plone/@@logo/icon/APPLE_TOUCH_ICON', 'sizes': '180x180'}],
+            [{
+                'href': 'http://nohost/plone/@@logo/icon/APPLE_TOUCH_ICON?r={}'.format(etag),
+                'sizes': '180x180'}],
             map(lambda x: {
                 'href': x.attrib['href'],
                 'sizes': x.attrib['sizes'],
@@ -33,17 +37,17 @@ class TestIconViewlet(FunctionalTestCase):
                 {
                     'type': 'image/png',
                     'sizes': '32x32',
-                    'href': 'http://nohost/plone/@@logo/icon/FAVICON_32X32',
+                    'href': 'http://nohost/plone/@@logo/icon/FAVICON_32X32?r={}'.format(etag),
                 },
                 {
                     'type': 'image/png',
                     'sizes': '16x16',
-                    'href': 'http://nohost/plone/@@logo/icon/FAVICON_16X16',
+                    'href': 'http://nohost/plone/@@logo/icon/FAVICON_16X16?r={}'.format(etag),
                 },
                 {
                     'type': '',
                     'sizes': '',
-                    'href': 'http://nohost/plone/@@logo/icon/FAVICON',
+                    'href': 'http://nohost/plone/@@logo/icon/FAVICON?r={}'.format(etag),
                 },
             ],
             map(lambda x: {
@@ -54,13 +58,13 @@ class TestIconViewlet(FunctionalTestCase):
         )
 
         self.assertEqual(
-            ['http://nohost/plone/manifest.json'],
+            ['http://nohost/plone/manifest.json?r={}'.format(etag)],
             map(lambda x: x.attrib['href'], browser.css(
                 'link[rel="manifest"]'))
         )
 
         self.assertEqual(
-            ['http://nohost/plone/browserconfig.xml'],
+            ['http://nohost/plone/browserconfig.xml?r={}'.format(etag)],
             map(lambda x: x.attrib['content'], browser.css(
                 'meta[name="msapplication-config"]'))
         )
