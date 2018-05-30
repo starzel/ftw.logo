@@ -36,6 +36,7 @@ def make_ico_converter():
         def merge_scales(first, other):
             first.format = 'ico'
             first.append(other)
+            other.close()
             return first
 
         return reduce(merge_scales, scales)
