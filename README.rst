@@ -5,7 +5,7 @@ Introduction
 ============
 
 Plone extension providing smart logo handling.
-Based on an svg Logo or Icon the extension is able to produce all sorts
+Based on an svg Logo or Icon the extension is able to produce all kinds
 of scales such as apple touch icons or android PWA logos.
 
 Compatibility
@@ -13,8 +13,8 @@ Compatibility
 
 Plone 4.3.x
 
-Prerequisite
-============
+Prerequisites
+=============
 
 See `wand.py dependencies <http://docs.wand-py.org/en/0.4.4/index.html#requirements>`_
 
@@ -48,12 +48,12 @@ Scales
 ======
 
 Basically there are just logo and icon scales.
-The logo scales are mostly used on the top right and can have
-any dimensions. The converter creates a ``logo`` and ``mobile_logo`` out of the
+The logo scales are mostly used on the top left and can have
+any dimensions. The converter creates a ``logo`` and ``mobile_logo`` from the
 base logo which has to be an svg file.
-The icon scales are used for ``apple_touch_icons``, ``favicons`` or ``andoird PWA icons``.
-The icons are square as well as the source.
-That is becuase we need two different source files. One with an arbitary ratio
+The icon scales are used for ``apple_touch_icons``, ``favicons`` or ``android PWA icons``.
+The base icon must be square, and the scaled icons will also if course be square.
+In summary we need two different SVG source files. One with an arbitary ratio
 and the other with a square ratio.
 
 All scales are taken from https://realfavicongenerator.net/.
@@ -77,7 +77,7 @@ The available scales are:
 Converter
 =========
 
-The converter holds all different scale definitions so he is able to generate
+The converter holds all the scale definitions and so is able to generate
 the scales needed. `wand.py <http://docs.wand-py.org/en/0.4.4/>`_ is used
 to convert the svg source files into the different scales.
 The converter generates a modified ``wand.py``
@@ -92,8 +92,18 @@ ZCML
 The extension introduces a custom icon and logo directive for zcml.
 Both directives accept ``for``, ``layer`` and ``base`` attributes.
 The base attribute defines the svg source files for all scales.
-The multiadapter adapts context and request. So using ``for`` and ``layer`` the
-base value can be overridden.
+The multiadapter adapts context and request. So the svg source file
+can be overridden by using one or both of ``for`` and ``layer``.
+
+First include the directive:
+
+.. code-block:: xml
+
+<configure
+    ...
+    xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
+    ...
+    >
 
 Example:
 
@@ -105,19 +115,19 @@ The next block will override the previous config.
 
 .. code-block:: xml
 
-   <logo:logo base="custom_logo.svg" layer="IDummyLayer" />
+   <logo:logo base="custom_logo.svg" layer="your.product.interfaces.IYourProductLayer" />
 
 Logo View
 =========
 
-All logos and icons can be access through the logo browser view.
+All logos and icons can be accessed through the logo browser view.
 The URL consists of the browser view name ``@@logo`` followed by the type of the
 image and the actual scale.
 
 Examples:
 
-- ``@@logo/logo/BASE`` this will give the svg logo source.
-- ``@@logo/icon/APPLE_TOUCH_ICON`` this will give apple touch icon as a png image.
+- ``@@logo/logo/BASE``  will show the svg logo source.
+- ``@@logo/icon/APPLE_TOUCH_ICON``  will show the apple touch icon as a png image.
 
 Caching
 =======
