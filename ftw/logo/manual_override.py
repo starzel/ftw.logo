@@ -9,59 +9,57 @@ from ftw.logo import _
 
 class IManualOverrides(model.Schema):
 
-    # TODO override to a DIFFERENT widget
-    #~ form.widget(base_logo=NamedImageFieldWidget)
-    base_logo = NamedBlobImage(
+    logo_BASE = NamedBlobImage(
         title = _(u"SVG base logo"),
         required=False,
     )
 
-    standard_logo = NamedBlobImage(
+    logo_LOGO = NamedBlobImage(
         title = _(u"Standard (desktop) logo (PNG)"),
         required=False,
     )
 
-    mobile_logo = NamedBlobImage(
+    logo_MOBILE_LOGO = NamedBlobImage(
         title = _(u"Mobile logo (PNG)"),
         required=False,
     )
 
-    base_icon = NamedBlobImage(
+    icon_BASE = NamedBlobImage(
         title = _(u"SVG base icon"),
         required=False,
     )
 
-    apple_touch_icon = NamedBlobImage(
+    icon_APPLE_TOUCH_ICON = NamedBlobImage(
         title = _(u"Apple touch icon"),
         required=False,
     )
 
-    favicon_32 = NamedBlobImage(
+    icon_FAVICON_32X32 = NamedBlobImage(
         title = _(u"Favicon 32x32"),
         required=False,
     )
 
-    favicon_16 = NamedBlobImage(
+    icon_FAVICON_16X16 = NamedBlobImage(
         title = _(u"Favicon 16x16"),
         required=False,
     )
 
-    mstile_150 = NamedBlobImage(
+    icon_MSTILE_150X150 = NamedBlobImage(
         title = _(u"Mstile icon 150x150"),
         required=False,
     )
 
-    android_192 = NamedBlobImage(
+    icon_ANDROID_192X192 = NamedBlobImage(
         title = _(u"Android icon 192x192"),
         required=False,
     )
 
-    android_512 = NamedBlobImage(
+    icon_ANDROID_512X512 = NamedBlobImage(
         title = _(u"Android icon 512x512"),
         required=False,
     )
 
-    favicon = NamedBlobImage(
+    icon_FAVICON = NamedBlobImage(
         title = _(u"Favicon"),
         required=False,
     )
@@ -78,6 +76,10 @@ class EditManualOverrideForm(edit.DefaultEditForm):
         self.request.set('disable_border', True)
 
         super(EditManualOverrideForm, self).update()
+
+    #~ def render(self):
+        #~ import pdb; pdb.set_trace()
+        #~ super(EditManualOverrideForm, self).render()
 
 
 class AddManualOverrideForm(add.DefaultAddForm):

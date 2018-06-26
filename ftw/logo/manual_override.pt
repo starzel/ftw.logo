@@ -10,8 +10,11 @@
         <metal:field-slot fill-slot="field">
           <metal:field use-macro="context/@@ploneform-macros/field">
           </metal:field>
-          <h4 tal:content="widget/label">Nice widget</h4>
-    
+          <div tal:define="widgetname python:widget.name.split('.')[-1];
+                          scale_name python:widgetname.replace('_', '/', 1);"
+              tal:attributes="data-scale-name scale_name">
+              <img tal:attributes="src string:/ftw_logo/@@logo/${scale_name}" />
+          </div>
         </metal:field-slot>
       </metal:block>
     </metal:block>
