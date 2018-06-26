@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="ftw.logo"
+      metal:use-macro="context/main_template/macros/master">
+
+    <metal:block fill-slot="main">
+      <metal:block use-macro="context/@@ploneform-macros/form" >
+        <metal:field-slot fill-slot="field">
+          <metal:field use-macro="context/@@ploneform-macros/field">
+          </metal:field>
+          <h4 tal:content="widget/label">Nice widget</h4>
+    
+        </metal:field-slot>
+      </metal:block>
+    </metal:block>
+
+
+</html>

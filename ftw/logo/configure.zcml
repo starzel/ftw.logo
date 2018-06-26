@@ -67,4 +67,10 @@
     <logo:logo base="resources/logo.svg" />
     <logo:icon base="resources/icon.svg" />
 
+    <browser:page
+      for=".manual_override.IManualOverrides"
+      name="edit"
+      class=".manual_override.EditManualOverrideForm"
+      permission="cmf.ModifyPortalContent" />
+
 </configure>

@@ -1,11 +1,16 @@
+from plone.dexterity.browser import add, edit
+from plone.formwidget.namedfile import NamedImageFieldWidget
 from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
 
 from ftw.logo import _
 
 class IManualOverrides(model.Schema):
 
+    # TODO override to a DIFFERENT widget
+    #~ form.widget(base_logo=NamedImageFieldWidget)
     base_logo = NamedBlobImage(
         title = _(u"SVG base logo"),
         required=False,
@@ -60,3 +65,23 @@ class IManualOverrides(model.Schema):
         title = _(u"Favicon"),
         required=False,
     )
+
+
+class EditManualOverrideForm(edit.DefaultEditForm):
+    label = _(u"Edit Manual Logo and Icon Overrides")
+    description = _(u"Overrides for different sizes of logo and icon")
+
+    template = ViewPageTemplateFile('manual_override.pt')
+
+    def update(self):
+        # disable Plone's editable border
+        self.request.set('disable_border', True)
+
+        super(EditManualOverrideForm, self).update()
+
+
+class AddManualOverrideForm(add.DefaultAddForm):
+    portal_type = 'ftw.logo.ManualOverrides'
+
+class AddManualOverrideView(add.DefaultAddView):
+    form = AddManualOverrideForm
