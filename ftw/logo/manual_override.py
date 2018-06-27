@@ -9,6 +9,12 @@ from ftw.logo import _
 
 class IManualOverrides(model.Schema):
 
+    # Note: The field names are carefully constructed as one of:
+    #   logo_<logo scale name>, or
+    #   icon_<icon scale name>
+    # The form (manual_override.pt) depends on this to find the ZCML
+    # default image
+
     logo_BASE = NamedBlobImage(
         title = _(u"SVG base logo"),
         required=False,
@@ -67,7 +73,9 @@ class IManualOverrides(model.Schema):
 
 class EditManualOverrideForm(edit.DefaultEditForm):
     label = _(u"Edit Manual Logo and Icon Overrides")
-    description = _(u"Overrides for different sizes of logo and icon")
+    description = _(u"Site logos and icons set in ZCML are shown in " +
+                    u"the left column. Overrides from this form are " +
+                    u"shown in the right column")
 
     template = ViewPageTemplateFile('manual_override.pt')
 

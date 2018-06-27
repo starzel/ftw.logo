@@ -6,15 +6,40 @@
       metal:use-macro="context/main_template/macros/master">
 
     <metal:block fill-slot="main">
-      <metal:block use-macro="context/@@ploneform-macros/form" >
-        <metal:field-slot fill-slot="field">
-          <metal:field use-macro="context/@@ploneform-macros/field">
-          </metal:field>
-          <div tal:define="widgetname python:widget.name.split('.')[-1];
-                          scale_name python:widgetname.replace('_', '/', 1);"
-              tal:attributes="data-scale-name scale_name">
-              <img tal:attributes="src string:/ftw_logo/@@logo/${scale_name}" />
-          </div>
+      <h1>Manually set site Logos and Icons</h1>
+      <metal:block use-macro="context/@@ploneform-macros/titlelessform" >
+        <metal:field-slot fill-slot="fields">
+          <table>
+            <thead>
+              <tr>
+                <th class="zcml-image">ZCML logos/icons</th>
+                <th class="dexterity-override">Manual Overrides</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tal:widgets repeat="widget view/widgets/values">
+                <tr>
+                  <th colspan="2">
+                    <span class="field-title"
+                          tal:content="widget/label"></span>
+                    <span class="field-desc"
+                          tal:content="widget/field/description"></span>
+                  </th>
+                </tr>
+                <tr>
+                  <td tal:define="widgetname python:widget.name.split('.')[-1];
+                                  scale_name python:widgetname.replace('_', '/', 1);"
+                      class="zcml-image">
+                    <img tal:attributes="src string:/ftw_logo/@@logo/${scale_name}" />
+                  </td>
+                  <td class="dexterity-override">
+                    <metal:field use-macro="context/@@ploneform-macros/field">
+                    </metal:field>
+                  </td>
+                </tr>
+              </tal:widgets>
+            </tbody>
+          </table>
         </metal:field-slot>
       </metal:block>
     </metal:block>

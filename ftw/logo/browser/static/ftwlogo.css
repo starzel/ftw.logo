@@ -1,0 +1,47 @@
+.portaltype-ftw-logo-manualoverrides #content table {
+    width: 100%;
+}
+.portaltype-ftw-logo-manualoverrides #content table thead th {
+    background: lightgrey;
+    padding: 0.75em 0.5em;
+    font-size: 1.5em;
+}
+.portaltype-ftw-logo-manualoverrides #content table tbody th {
+    background: whitesmoke;
+    padding: 0.5em;
+    font-size: 1.25em;
+}
+.portaltype-ftw-logo-manualoverrides #content table td {
+    border: aliceblue 1px solid;
+    padding: 1em;
+}
+
+.portaltype-ftw-logo-manualoverrides td.zcml-image {
+    width: 40%;
+}
+.portaltype-ftw-logo-manualoverrides td.dexterity-override {
+    width: 60%;
+}
+.portaltype-ftw-logo-manualoverrides .field-desc {
+    font-weight: 400;
+    font-size: 1em;
+    margin-left: 2em;
+}
+
+.portaltype-ftw-logo-manualoverrides td.zcml-image > img {
+    max-width: 90%;
+    max-height: 90%;
+    margin: 1em auto;
+    display: block;
+}
+.portaltype-ftw-logo-manualoverrides #content .field > label {
+    display: none;
+}
+.portaltype-ftw-logo-manualoverrides .field > span > span {
+    float: right;
+    width: 64%;
+    display: block;
+}
+.portaltype-ftw-logo-manualoverrides .field > span > span > img[width] {
+    width: 93%;
+}
