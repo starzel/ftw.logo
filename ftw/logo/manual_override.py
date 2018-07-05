@@ -22,6 +22,8 @@ class IManualOverrides(model.Schema):
 
     logo_BASE = NamedBlobImage(
         title = _(u"SVG base logo"),
+        description = _(u"Overriding the base logo will generate an override "
+                        u"for BOTH logos below if not already set."),
         required=False,
     )
 
@@ -37,6 +39,8 @@ class IManualOverrides(model.Schema):
 
     icon_BASE = NamedBlobImage(
         title = _(u"SVG base icon"),
+        description = _(u"Overriding the base icon will generate an "
+                        u"override for ALL icons below if not already set."),
         required=False,
     )
 
@@ -83,11 +87,11 @@ class CreateOverridesIfReqdForm(BrowserView):
     def __call__(self):
         navroot = self.context
         override_item_id = 'ftw-logo-overrides'
-        overridesItem = navroot.get(override_item_id, None)
+        overridesItem = navroot.get(override_item_id)
         if overridesItem is None:
             safeWrite(navroot, self.request)
 
-            new_obj = api.content.create(
+            overridesItem = api.content.create(
                 type='ftw.logo.ManualOverrides',
                 title='Logo and Icon Content',
                 id=override_item_id,
@@ -96,9 +100,8 @@ class CreateOverridesIfReqdForm(BrowserView):
             )
             transaction.get().commit()
 
-        self.request.response.redirect('{}/{}/@@edit'.format(
-            navroot.absolute_url_path(),
-            override_item_id
+        self.request.response.redirect('{}/@@edit'.format(
+            overridesItem.absolute_url_path()
         ))
         return ""
 
@@ -116,14 +119,3 @@ class EditManualOverrideForm(edit.DefaultEditForm):
         self.request.set('disable_border', True)
 
         super(EditManualOverrideForm, self).update()
-
-    #~ def render(self):
-        #~ import pdb; pdb.set_trace()
-        #~ super(EditManualOverrideForm, self).render()
-
-
-class AddManualOverrideForm(add.DefaultAddForm):
-    portal_type = 'ftw.logo.ManualOverrides'
-
-class AddManualOverrideView(add.DefaultAddView):
-    form = AddManualOverrideForm

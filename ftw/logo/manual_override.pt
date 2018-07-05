@@ -20,10 +20,10 @@
               <tal:widgets repeat="widget view/widgets/values">
                 <tr>
                   <th colspan="2">
-                    <span class="field-title"
-                          tal:content="widget/label"></span>
-                    <span class="field-desc"
-                          tal:content="widget/field/description"></span>
+                    <div class="field-title"
+                          tal:content="widget/label"></div>
+                    <div class="field-desc"
+                          tal:content="widget/field/description"></div>
                   </th>
                 </tr>
                 <tr>
