@@ -68,6 +68,12 @@
     <logo:icon base="resources/icon.svg" />
 
     <browser:page
+      for="plone.app.layout.navigation.interfaces.INavigationRoot"
+      name="logo-and-icon-overrides"
+      class=".manual_override.CreateOverridesIfReqdForm"
+      permission="cmf.ModifyPortalContent" />
+
+    <browser:page
       for=".manual_override.IManualOverrides"
       name="edit"
       class=".manual_override.EditManualOverrideForm"

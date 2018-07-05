@@ -1,8 +1,13 @@
+from plone import api
 from plone.dexterity.browser import add, edit
 from plone.formwidget.namedfile import NamedImageFieldWidget
 from plone.namedfile.field import NamedBlobImage
+from plone.protect.auto import safeWrite
+from plone.protect.utils import addTokenToUrl
 from plone.supermodel import model
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+import transaction
 from zope import schema
 
 from ftw.logo import _
@@ -69,6 +74,33 @@ class IManualOverrides(model.Schema):
         title = _(u"Favicon"),
         required=False,
     )
+
+
+class CreateOverridesIfReqdForm(BrowserView):
+    """
+    Create IManualOverrides if it does not exist and redirect to it's edit form
+    """
+    def __call__(self):
+        navroot = self.context
+        override_item_id = 'ftw-logo-overrides'
+        overridesItem = navroot.get(override_item_id, None)
+        if overridesItem is None:
+            safeWrite(navroot, self.request)
+
+            new_obj = api.content.create(
+                type='ftw.logo.ManualOverrides',
+                title='Logo and Icon Content',
+                id=override_item_id,
+                safe_id=True,
+                container=navroot
+            )
+            transaction.get().commit()
+
+        self.request.response.redirect('{}/{}/@@edit'.format(
+            navroot.absolute_url_path(),
+            override_item_id
+        ))
+        return ""
 
 
 class EditManualOverrideForm(edit.DefaultEditForm):
