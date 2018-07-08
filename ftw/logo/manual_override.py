@@ -93,7 +93,8 @@ class CreateOverridesIfReqdForm(BrowserView):
 
             overridesItem = api.content.create(
                 type='ftw.logo.ManualOverrides',
-                title='Logo and Icon Content',
+                title='Logo and Icon Overrides',
+                description='Manual overrides for the site logo(s) and icons',
                 id=override_item_id,
                 safe_id=True,
                 container=navroot
