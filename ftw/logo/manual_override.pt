@@ -30,7 +30,7 @@
                   <td tal:define="widgetname python:widget.name.split('.')[-1];
                                   scale_name python:widgetname.replace('_', '/', 1);"
                       class="zcml-image">
-                    <img tal:attributes="src string:/ftw_logo/@@logo/${scale_name}" />
+                    <img tal:attributes="src string:/ftw_logo/@@logo/z/${scale_name}" />
                   </td>
                   <td class="dexterity-override">
                     <metal:field use-macro="context/@@ploneform-macros/field">

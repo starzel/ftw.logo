@@ -30,9 +30,13 @@ class LogoView(BrowserView):
         super(LogoView, self).__init__(context, request)
         self.scale = None
         self.config = None
+        self.zcml_only = None
 
     def publishTraverse(self, request, name):
-        if self.config is None and name in CONFIGS:
+        if self.zcml_only is None and self.config is None and name == 'z':
+            self.zcml_only = True
+            return self
+        elif self.config is None and name in CONFIGS:
             self.config_name = name
             self.config = CONFIGS[name]
             return self
@@ -45,7 +49,8 @@ class LogoView(BrowserView):
     def __call__(self):
         if not self.config or not self.scale:
             raise BadRequest()
-        return (self.get_dx_overridden_image() or
+        check_overrides = not self.zcml_only
+        return ((check_overrides and self.get_dx_overridden_image()) or
                 self.get_zcml_configured_image())
 
     def get_dx_overridden_image(self):
@@ -60,7 +65,7 @@ class LogoView(BrowserView):
         field = getattr(overridesItem, field_name)
         if not field:
             # check if base logo/icon  has been overridden, then transform it and return it
-            base_field_name = '{}_BASE'.format(self.scale)
+            base_field_name = '{}_BASE'.format(self.config_name)
             field = getattr(overridesItem, base_field_name)
             # TODO transform
         if not field:
