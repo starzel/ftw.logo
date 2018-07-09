@@ -13,6 +13,8 @@ from zope.interface import Invalid
 
 from ftw.logo import _
 
+OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
+
 def svg_file_only(value):
     if value.contentType != 'image/svg+xml':
         raise Invalid(
@@ -113,8 +115,7 @@ class CreateOverridesIfReqdForm(BrowserView):
     """
     def __call__(self):
         navroot = self.context
-        override_item_id = 'ftw-logo-overrides'
-        overridesItem = navroot.get(override_item_id)
+        overridesItem = navroot.get(OVERRIDES_FIXED_ID)
         if overridesItem is None:
             safeWrite(navroot, self.request)
 
@@ -122,7 +123,7 @@ class CreateOverridesIfReqdForm(BrowserView):
                 type='ftw.logo.ManualOverrides',
                 title='Logo and Icon Overrides',
                 description='Manual overrides for the site logo(s) and icons',
-                id=override_item_id,
+                id=OVERRIDES_FIXED_ID,
                 safe_id=True,
                 container=navroot
             )
