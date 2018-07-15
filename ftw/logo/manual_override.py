@@ -1,15 +1,11 @@
-from plone import api
-from plone.dexterity.browser import add, edit
+from plone.dexterity.browser import edit
 from plone.dexterity.content import Item
-from plone.formwidget.namedfile import NamedImageFieldWidget
+from plone.dexterity.utils import createContentInContainer
 from plone.namedfile.field import NamedBlobImage
-from plone.protect.auto import safeWrite
-from plone.protect.utils import addTokenToUrl
 from plone.supermodel import model
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 import transaction
-from zope import schema
 from zope.component import adapter
 from zope.interface import Invalid
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
@@ -143,15 +139,14 @@ class CreateOverridesIfReqdForm(BrowserView):
         navroot = self.context
         overridesItem = navroot.get(OVERRIDES_FIXED_ID)
         if overridesItem is None:
-            safeWrite(navroot, self.request)
 
-            overridesItem = api.content.create(
-                type='ftw.logo.ManualOverrides',
+            overridesItem = createContentInContainer(
+                navroot,
+                'ftw.logo.ManualOverrides',
+                checkConstraints=False,
+                id=OVERRIDES_FIXED_ID,
                 title='Logo and Icon Overrides',
                 description='Manual overrides for the site logo(s) and icons',
-                id=OVERRIDES_FIXED_ID,
-                safe_id=True,
-                container=navroot
             )
             transaction.get().commit()
 
