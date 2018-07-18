@@ -9,6 +9,7 @@
 
     <five:registerPackage package="." initialize=".initialize" />
 
+    <include file="permissions.zcml" />
     <include package=".browser" />
 
     <genericsetup:registerProfile
@@ -71,13 +72,13 @@
       for="plone.app.layout.navigation.interfaces.INavigationRoot"
       name="logo-and-icon-overrides"
       class=".manual_override.CreateOverridesIfReqdForm"
-      permission="cmf.ModifyPortalContent" />
+      permission="ftw.logo.OverrideSiteLogosAndIcons" />
 
     <browser:page
       for=".manual_override.IManualOverrides"
       name="edit"
       class=".manual_override.EditManualOverrideForm"
-      permission="cmf.ModifyPortalContent" />
+      permission="ftw.logo.OverrideSiteLogosAndIcons" />
 
     <subscriber handler=".manual_override.overrides_changed" />
 

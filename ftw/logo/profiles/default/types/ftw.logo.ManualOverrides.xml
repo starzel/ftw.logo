@@ -24,7 +24,7 @@
   </property>
   <property name="default_view_fallback">False</property>
 
-  <property name="add_permission">cmf.AddPortalContent</property>
+  <property name="add_permission">ftw.logo.OverrideSiteLogosAndIcons</property>
 
   <property name="klass">ftw.logo.manual_override.ManualOverrides</property>
 
