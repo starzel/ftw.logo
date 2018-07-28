@@ -54,9 +54,6 @@ class LogoView(BrowserView):
                 self.get_zcml_configured_image())
 
     def get_dx_overridden_image(self):
-        # TODO this check not nec - remove
-        if not INavigationRoot.providedBy(self.context):
-            return None
         overridesItem = self.context.get(OVERRIDES_FIXED_ID)
         if overridesItem is None:
             return None
