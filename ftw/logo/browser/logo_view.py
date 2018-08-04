@@ -61,10 +61,10 @@ class LogoView(BrowserView):
         field_name = '{}_{}'.format(self.config_name, self.scale)
         field = getattr(overridesItem, field_name)
         if not field:
-            # check if base logo/icon  has been overridden, then transform it and return it
+            # check if base logo/icon  has been overridden, then return the transformed BASE logo/icon
             base_field_name = '{}_BASE'.format(self.config_name)
             field = getattr(overridesItem, base_field_name)
-            # TODO transform
+            # TODO fetch transformed BASE logo/icon
         if not field:
             return None
 
