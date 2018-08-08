@@ -79,4 +79,6 @@
       class=".manual_override.EditManualOverrideForm"
       permission="cmf.ModifyPortalContent" />
 
+    <subscriber handler=".manual_override.overrides_changed" />
+
 </configure>

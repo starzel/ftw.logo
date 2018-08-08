@@ -2,24 +2,25 @@ from ftw.logo.image import Image
 
 
 def make_raw():
-    def raw(src):
-        return Image(src, 'svg')
+    def raw(img):
+        return Image(image=img.convert('svg'))
     return raw
 
 
 def make_resizer(width=0, height=0, extension='png'):
-    def resizer(src):
-        img = Image(src, extension)
+    def resizer(img):
+        img = img.clone()
         img.sample(width, height)
-        return img
+        return Image(image=img.convert(extension))
     return resizer
 
 
 def make_transformer(width='', height='', extension='png'):
-    def transformer(src):
-        img = Image(src, extension)
+    def transformer(img):
+        img = img.clone()
         img.transform(resize='{}x{}'.format(width, height))
-        return img
+        #~ import pdb; pdb.set_trace()
+        return Image(image=img.convert(extension))
     return transformer
 
 

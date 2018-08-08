@@ -30,7 +30,7 @@ class TestZCML(TestCase):
     def test_logo_component(self):
         self.load_zcml('<logo:logo base="{}" />'.format(logo))
         registry = getMultiAdapter((None, None), ILogoConfig)
-        self.assertEqual(logo, registry.base)
+        self.assertEqual(logo, registry.base.filename)
         verifyObject(ILogoConfig, registry)
 
     def test_logo_component_is_overwriteable(self):
@@ -39,14 +39,14 @@ class TestZCML(TestCase):
             '<logo:logo base="{}"'.format(custom),
             '  layer="ftw.logo.tests.test_zcml.IDummyLayer" />')
         registry = getMultiAdapter((object(), DummyRequest()), ILogoConfig)
-        self.assertEqual(custom, registry.base)
+        self.assertEqual(custom, registry.base.filename)
         verifyObject(ILogoConfig, registry)
 
     def test_icon_component(self):
         self.load_zcml(
             '<logo:icon base="{}" />'.format(icon))
         registry = getMultiAdapter((None, None), IIconConfig)
-        self.assertEqual(icon, registry.base)
+        self.assertEqual(icon, registry.base.filename)
         verifyObject(IIconConfig, registry)
 
     def test_icon_component_is_overwriteable(self):
@@ -55,7 +55,7 @@ class TestZCML(TestCase):
             '<logo:icon base="{}"'.format(custom),
             '  layer="ftw.logo.tests.test_zcml.IDummyLayer" />')
         registry = getMultiAdapter((object(), DummyRequest()), IIconConfig)
-        self.assertEqual(custom, registry.base)
+        self.assertEqual(custom, registry.base.filename)
         verifyObject(IIconConfig, registry)
 
     def load_zcml(self, *lines):

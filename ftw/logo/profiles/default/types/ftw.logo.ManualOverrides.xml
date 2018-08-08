@@ -26,7 +26,7 @@
 
   <property name="add_permission">cmf.AddPortalContent</property>
 
-  <property name="klass">plone.dexterity.content.Item</property>
+  <property name="klass">ftw.logo.manual_override.ManualOverrides</property>
 
   <property name="behaviors">
   </property>

@@ -1,5 +1,6 @@
 from plone import api
 from plone.dexterity.browser import add, edit
+from plone.dexterity.content import Item
 from plone.formwidget.namedfile import NamedImageFieldWidget
 from plone.namedfile.field import NamedBlobImage
 from plone.protect.auto import safeWrite
@@ -9,9 +10,15 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 import transaction
 from zope import schema
+from zope.component import adapter
 from zope.interface import Invalid
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 from ftw.logo import _
+from ftw.logo.collector import collect_icons
+from ftw.logo.collector import collect_logos
+from ftw.logo.logoconfig import IconConfigOverride
+from ftw.logo.logoconfig import LogoConfigOverride
 
 OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
 
@@ -109,6 +116,26 @@ class IManualOverrides(model.Schema):
         constraint=png_file_only,
     )
 
+
+class ManualOverrides(Item):
+    """A custom content class"""
+
+    def __init__(self, id=None):
+        super(ManualOverrides, self).__init__(id)
+        logo_overrides = None
+        icon_overrides = None
+
+
+@adapter(IManualOverrides, IObjectModifiedEvent)
+def overrides_changed(override_object, event):
+    #~ import pdb; pdb.set_trace()
+    if override_object.logo_BASE:
+        override_object.logo_overrides = LogoConfigOverride(override_object.logo_BASE)
+        collect_logos(override_object.logo_overrides)
+    if override_object.icon_BASE:
+        override_object.icon_overrides = IconConfigOverride(override_object.icon_BASE)
+        collect_icons(override_object.icon_overrides)
+
 class CreateOverridesIfReqdForm(BrowserView):
     """
     Create IManualOverrides if it does not exist and redirect to it's edit form
@@ -146,5 +173,19 @@ class EditManualOverrideForm(edit.DefaultEditForm):
     def update(self):
         # disable Plone's editable border
         self.request.set('disable_border', True)
+        #~ import pdb; pdb.set_trace()
 
         super(EditManualOverrideForm, self).update()
+
+    #~ @button.buttonAndHandler(_(u'Save'), name='save')
+    #~ def handleApply(self, action):
+        #~ data, errors = self.extractData()
+        #~ if errors:
+            #~ self.status = self.formErrorsMessage
+            #~ return
+        #~ self.applyChanges(data)
+        #~ IStatusMessage(self.request).addStatusMessage(
+            #~ self.success_message, "info success"
+        #~ )
+        #~ self.request.response.redirect(self.nextURL())
+        #~ notify(EditFinishedEvent(self.context))
