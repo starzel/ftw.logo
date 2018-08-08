@@ -24,13 +24,6 @@ class AbstractConfig(object):
             cachekey.update(chunk)
         return cachekey.hexdigest()
 
-    def get_cachekey_from_path(self, path):
-        cachekey = sha256()
-        with open(path, 'rb') as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                cachekey.update(chunk)
-        return cachekey.hexdigest()
-
 
 class LogoConfig(AbstractConfig):
     """Logo config entry.

@@ -128,7 +128,6 @@ class ManualOverrides(Item):
 
 @adapter(IManualOverrides, IObjectModifiedEvent)
 def overrides_changed(override_object, event):
-    #~ import pdb; pdb.set_trace()
     if override_object.logo_BASE:
         override_object.logo_overrides = LogoConfigOverride(override_object.logo_BASE)
         collect_logos(override_object.logo_overrides)
@@ -173,19 +172,5 @@ class EditManualOverrideForm(edit.DefaultEditForm):
     def update(self):
         # disable Plone's editable border
         self.request.set('disable_border', True)
-        #~ import pdb; pdb.set_trace()
 
         super(EditManualOverrideForm, self).update()
-
-    #~ @button.buttonAndHandler(_(u'Save'), name='save')
-    #~ def handleApply(self, action):
-        #~ data, errors = self.extractData()
-        #~ if errors:
-            #~ self.status = self.formErrorsMessage
-            #~ return
-        #~ self.applyChanges(data)
-        #~ IStatusMessage(self.request).addStatusMessage(
-            #~ self.success_message, "info success"
-        #~ )
-        #~ self.request.response.redirect(self.nextURL())
-        #~ notify(EditFinishedEvent(self.context))

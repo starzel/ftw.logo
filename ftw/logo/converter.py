@@ -19,7 +19,6 @@ def make_transformer(width='', height='', extension='png'):
     def transformer(img):
         img = img.clone()
         img.transform(resize='{}x{}'.format(width, height))
-        #~ import pdb; pdb.set_trace()
         return Image(image=img.convert(extension))
     return transformer
 
