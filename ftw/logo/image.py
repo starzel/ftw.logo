@@ -8,7 +8,7 @@ class Image(Image):
         self.filename = kwargs.get("filename", None)
         # behind format is a setter so the extension has to be kept seperately
         self.extension = kwargs.pop("extension", None)
-        if not os.path.isfile(self.filename):
+        if self.filename and not os.path.isfile(self.filename):
             raise ValueError('{} could not be found'.format(self.filename))
 
         super(Image, self).__init__(**kwargs)
@@ -34,7 +34,6 @@ class Image(Image):
                 self._blob = f.read()
         else:
             self._blob = super(Image, self).make_blob(self.extension)
-        self.close()
         return self._blob
 
     def append(self, other):

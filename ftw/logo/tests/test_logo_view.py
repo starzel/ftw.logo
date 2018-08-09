@@ -39,9 +39,6 @@ class TestLogoView(FunctionalTestCase):
         '''.format(custom))
         after = get_etag_value_for(self.portal, self.request)
 
-        self.assertEqual(
+        self.assertNotEqual(
             before,
-            '9c47ee8dea9b4760b34da6ce7c6bbfb46a7f5583f2200e957dad60541b66ffa7')
-        self.assertEqual(
-            after,
-            '49d730c981585fdffafccc1d3a8b38e987bb9146005f183417ec504ed1a997e4')
+            after)

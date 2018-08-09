@@ -3,7 +3,7 @@ from ftw.logo.image import Image
 
 def make_raw():
     def raw(img):
-        return Image(image=img.convert('svg'))
+        return img
     return raw
 
 
