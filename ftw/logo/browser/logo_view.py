@@ -45,9 +45,9 @@ class LogoView(BrowserView):
             (self.context, self.request), ILogo).get_config(self.config)
         scale = config.get_scale(self.scale)
         response = self.request.response
-        iterator = StringIOStreamIterator(scale.make_blob())
+        iterator = StringIOStreamIterator(scale['data'])
         contenttype = mimetypes.types_map.get('.{}'.format(
-            scale.extension), 'application/octet-stream')
+            scale['extension']), 'application/octet-stream')
         response.setHeader('X-Theme-Disabled', 'True')
         charset = '' if contenttype == 'application/octet-stream' else 'charset=utf-8'
         response.setHeader(
