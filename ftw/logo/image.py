@@ -38,3 +38,17 @@ class Image(Image):
 
     def append(self, other):
         self.sequence.append(other)
+
+    def __getstate__(self):
+        # We shouldn't need to use the filename again
+        return {
+            'blob': self.make_blob(),
+            'format': self.format
+        }
+
+    def __setstate__(self, state):
+        format = state.get('format', state.get('ext'))
+        if format:
+            self.__init__(blob=state['blob'], format=format)
+        else:
+            self.__init__(blob=state['blob'])

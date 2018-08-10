@@ -63,8 +63,12 @@ class LogoView(BrowserView):
         if not field:
             # check if base logo/icon  has been overridden, then return the transformed BASE logo/icon
             base_field_name = '{}_BASE'.format(self.config_name)
-            field = getattr(overridesItem, base_field_name)
-            # TODO fetch transformed BASE logo/icon
+            if getattr(overridesItem, base_field_name):
+                try:
+                    config = getattr(overridesItem, '{}_overrides'.format(self.config_name))
+                    return self.show_config_scale(config)
+                except AttributeError:
+                    pass
         if not field:
             return None
 
@@ -74,11 +78,16 @@ class LogoView(BrowserView):
     def get_zcml_configured_image(self):
         config = getMultiAdapter(
             (self.context, self.request), ILogo).get_config(self.config)
+        return self.show_config_scale(config)
+
+
+    def show_config_scale(self, config):
         scale = config.get_scale(self.scale)
         response = self.request.response
         iterator = StringIOStreamIterator(scale['data'])
-        contenttype = mimetypes.types_map.get('.{}'.format(
-            scale['extension']), 'application/octet-stream')
+        extension = scale['extension'] or scale.format.lower()
+        contenttype = mimetypes.types_map.get('.{}'.format(extension),
+                                              'application/octet-stream')
         response.setHeader('X-Theme-Disabled', 'True')
         charset = '' if contenttype == 'application/octet-stream' else 'charset=utf-8'
         response.setHeader(
