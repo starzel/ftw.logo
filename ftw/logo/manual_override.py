@@ -174,3 +174,15 @@ class EditManualOverrideForm(edit.DefaultEditForm):
         self.request.set('disable_border', True)
 
         super(EditManualOverrideForm, self).update()
+
+    def get_origin_for_scale(self, fullscalename):
+        """ Lookup HTML class for depending on authoritative origin for a particular scale """
+        fieldname = fullscalename.replace('/', '_')
+        config_name = fullscalename.split('/')[0]
+        if getattr(self.context, fieldname):
+            return 'field_override'
+        if getattr(self.context, '{}_BASE'.format(config_name)):
+            return 'scaled_base_override'
+        else:
+            return 'zcml'
+            

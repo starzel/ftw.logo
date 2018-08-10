@@ -19,8 +19,14 @@
 .portaltype-ftw-logo-manualoverrides td.zcml-image {
     width: 40%;
 }
+.portaltype-ftw-logo-manualoverrides td.widget {
+    width: 20%;
+}
 .portaltype-ftw-logo-manualoverrides td.dexterity-override {
-    width: 60%;
+    width: 40%;
+}
+.portaltype-ftw-logo-manualoverrides td.widget {
+    width: 20%;
 }
 .portaltype-ftw-logo-manualoverrides .field-desc {
     font-weight: 400;
@@ -36,6 +42,9 @@
     display: block;
 }
 .portaltype-ftw-logo-manualoverrides #content .field > label {
+    display: none;
+}
+.portaltype-ftw-logo-manualoverrides td.widget .field > span > span {
     display: none;
 }
 .portaltype-ftw-logo-manualoverrides .field > span > span {
