@@ -64,11 +64,9 @@ class LogoView(BrowserView):
             # check if base logo/icon  has been overridden, then return the transformed BASE logo/icon
             base_field_name = '{}_BASE'.format(self.config_name)
             if getattr(overridesItem, base_field_name):
-                try:
-                    config = getattr(overridesItem, '{}_overrides'.format(self.config_name))
+                config = getattr(overridesItem, '{}_overrides'.format(self.config_name), None)
+                if config:
                     return self.show_config_scale(config)
-                except AttributeError:
-                    pass
         if not field:
             return None
 
@@ -85,7 +83,7 @@ class LogoView(BrowserView):
         scale = config.get_scale(self.scale)
         response = self.request.response
         iterator = StringIOStreamIterator(scale['data'])
-        extension = scale['extension'] or scale.format.lower()
+        extension = scale.get('extension') or scale['format'].lower()
         contenttype = mimetypes.types_map.get('.{}'.format(extension),
                                               'application/octet-stream')
         response.setHeader('X-Theme-Disabled', 'True')
