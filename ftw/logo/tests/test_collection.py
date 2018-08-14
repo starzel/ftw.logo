@@ -1,6 +1,4 @@
 from unittest2 import TestCase
-from ftw.logo.collector import collect_icons
-from ftw.logo.collector import collect_logos
 from ftw.logo.logoconfig import LogoConfig
 from ftw.logo.logoconfig import IconConfig
 import os
@@ -19,7 +17,6 @@ class TestCollecter(TestCase):
 
     def test_all_logos_are_collected(self):
         component = LogoConfig(source)
-        collect_logos(component)
 
         self.assertEqual(len(component.scales), 3, 'Should store three scales')
         self.assertImage(component.get_scale('BASE'), 1, 1, 'svg')
@@ -28,7 +25,6 @@ class TestCollecter(TestCase):
 
     def test_all_icons_are_collected(self):
         component = IconConfig(source)
-        collect_icons(component)
 
         self.assertEqual(len(component.scales), 8, 'Should store eight scales')
         self.assertImage(component.get_scale('BASE'), 1, 1, 'svg')

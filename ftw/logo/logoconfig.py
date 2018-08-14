@@ -1,3 +1,5 @@
+from ftw.logo.converter import convert
+from ftw.logo.converter import SCALES
 from ftw.logo.image import Image
 from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogoConfig
@@ -8,12 +10,16 @@ from hashlib import sha256
 class AbstractConfig(object):
 
     def __init__(self, base):
-        self.base = Image(filename=base)
-        self.cachekey = self.get_cachekey_from_blob(self.base.make_blob())
+        base_img = Image(filename=base)
+        self.cachekey = self.get_cachekey_from_blob(base_img.make_blob())
         self.scales = {}
+        self.collect_scales(base_img)
 
     def add_scale(self, name, scale):
         self.scales[name] = scale
+
+    def collect_scales(self, base_img):
+        raise NotImplemented()
 
     def get_scale(self, name):
         return self.scales[name]
@@ -31,6 +37,9 @@ class LogoConfig(AbstractConfig):
 
     implements(ILogoConfig)
 
+    def collect_scales(self, base_img):
+        for scale in SCALES['LOGOS']:
+            self.add_scale(scale, convert(base_img, scale))
 
 class IconConfig(AbstractConfig):
     """Icon config entry.
@@ -38,18 +47,27 @@ class IconConfig(AbstractConfig):
 
     implements(IIconConfig)
 
+    def collect_scales(self, base_img):
+        for scale in SCALES['ICONS']:
+            self.add_scale(scale, convert(base_img, scale))
+
 class AbstractConfigOverride(AbstractConfig):
 
     def __init__(self, blobImage):
-        self.base = Image(blob=blobImage.data, format='svg')
+        base_img = Image(blob=blobImage.data, format='svg')
         self.cachekey = self.get_cachekey_from_blob(blobImage.data)
         self.scales = {}
+        self.collect_scales(base_img)
 
 class LogoConfigOverride(AbstractConfigOverride):
     """Logo config (TTW) overrides.
     """
 
     implements(ILogoConfig)
+
+    def collect_scales(self, base_img):
+        for scale in SCALES['LOGOS']:
+            self.add_scale(scale, convert(base_img, scale))
 
 
 class IconConfigOverride(AbstractConfigOverride):
@@ -58,3 +76,6 @@ class IconConfigOverride(AbstractConfigOverride):
 
     implements(IIconConfig)
 
+    def collect_scales(self, base_img):
+        for scale in SCALES['ICONS']:
+            self.add_scale(scale, convert(base_img, scale))

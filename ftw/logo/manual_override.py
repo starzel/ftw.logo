@@ -1,3 +1,6 @@
+from ftw.logo import _
+from ftw.logo.logoconfig import IconConfigOverride
+from ftw.logo.logoconfig import LogoConfigOverride
 from plone.dexterity.browser import edit
 from plone.dexterity.content import Item
 from plone.dexterity.utils import createContentInContainer
@@ -10,11 +13,6 @@ from zope.component import adapter
 from zope.interface import Invalid
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
-from ftw.logo import _
-from ftw.logo.collector import collect_icons
-from ftw.logo.collector import collect_logos
-from ftw.logo.logoconfig import IconConfigOverride
-from ftw.logo.logoconfig import LogoConfigOverride
 
 OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
 
@@ -126,10 +124,8 @@ class ManualOverrides(Item):
 def overrides_changed(override_object, event):
     if override_object.logo_BASE:
         override_object.logo_overrides = LogoConfigOverride(override_object.logo_BASE)
-        collect_logos(override_object.logo_overrides)
     if override_object.icon_BASE:
         override_object.icon_overrides = IconConfigOverride(override_object.icon_BASE)
-        collect_icons(override_object.icon_overrides)
 
 class CreateOverridesIfReqdForm(BrowserView):
     """

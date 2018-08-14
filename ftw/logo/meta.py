@@ -2,8 +2,6 @@ from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogoConfig
 from ftw.logo.logoconfig import IconConfig
 from ftw.logo.logoconfig import LogoConfig
-from ftw.logo.collector import collect_icons
-from ftw.logo.collector import collect_logos
 from zope.component.zcml import handler
 from zope.configuration import fields
 from zope.configuration.fields import GlobalInterface
@@ -43,8 +41,6 @@ class IIconDirective(Interface):
 def registerLogo(_context, **kwargs):
     component = LogoConfig(kwargs['base'])
 
-    collect_logos(component)
-
     def adapter_factory(context, request):
         return component
 
@@ -59,8 +55,6 @@ def registerLogo(_context, **kwargs):
 
 def registerIcon(_context, **kwargs):
     component = IconConfig(kwargs['base'])
-
-    collect_icons(component)
 
     def adapter_factory(context, request):
         return component
