@@ -55,3 +55,7 @@
 .portaltype-ftw-logo-manualoverrides .field > span > span > img[width] {
     width: 93%;
 }
+.portaltype-ftw-logo-manualoverrides .scaled_base_override .explanation {
+    background: wheat;
+    padding: 0.5em;
+}

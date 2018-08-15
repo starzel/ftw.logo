@@ -171,7 +171,7 @@ class EditManualOverrideForm(edit.DefaultEditForm):
         fieldname = fullscalename.replace('/', '_')
         config_name = fullscalename.split('/')[0]
         if getattr(self.context, fieldname):
-            return 'field_override'
+            return 'direct_override'
         if getattr(self.context, '{}_BASE'.format(config_name)):
             return 'scaled_base_override'
         else:
