@@ -26,8 +26,12 @@ class Image(Image):
     def make_blob(self):
         if self._blob:
             return self._blob
-        # wand.py is not able to convert mvg to svg
         if self.extension == 'svg':
+            # If the target extension is svg, and we assume that the input data is also svg,
+            # we don't need to transform anything, but we can simply return the original data
+            # read from self.filename.
+            # self contains the image, but it is already converted to MVG, but we cannot
+            # convert it back to SVG. Therefore we need to read the original.
             with open(self.filename, 'r') as f:
                 self._blob = f.read()
         else:

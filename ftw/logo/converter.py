@@ -72,4 +72,11 @@ def convert(source, scale):
     scales = flatten_scales(SCALES)
     if scale not in scales:
         raise Exception('scale: {} is not supported'.format(scale))
-    return scales[scale](source)
+    scale = scales[scale](source)
+    result = {'extension': scale.extension,
+              'width': scale.width,
+              'height': scale.height,
+              'format': scale.format,
+              'sequence_length': len(scale.sequence)}
+    result['data'] = scale.make_blob()  # closes scale as side effect
+    return result

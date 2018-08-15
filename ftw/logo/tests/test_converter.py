@@ -1,7 +1,5 @@
-from unittest2 import TestCase
-from ftw.testing import freeze
 from ftw.logo.converter import convert
-from datetime import datetime
+from unittest2 import TestCase
 import os
 
 
@@ -11,12 +9,12 @@ source = os.path.join(os.path.dirname(__file__), 'fixtures/logo.svg')
 class TestConverter(TestCase):
 
     def assertImage(self, img, width, height, format=None, blob=None):
-        self.assertEqual(img.width, width)
-        self.assertEqual(img.height, height)
+        self.assertEqual(img['width'], width)
+        self.assertEqual(img['height'], height)
         if format:
-            self.assertEqual(img.format.lower(), format.lower())
+            self.assertEqual(img['format'].lower(), format.lower())
         if blob:
-            self.assertEqual(img.make_blob(), blob)
+            self.assertEqual(img['data'], blob)
 
     def test_rejects_unsupported_types(self):
         with self.assertRaises(Exception) as context:
@@ -43,16 +41,5 @@ class TestConverter(TestCase):
 
     def test_converts_multipart_images(self):
         img = convert(source, 'FAVICON')
-        self.assertEqual(len(img.sequence), 3,
+        self.assertEqual(img['sequence_length'], 3,
                          'Should contain three subimages in the sequence')
-
-        self.assertImage(
-            img.sequence[0], 16, 16)
-
-        self.assertImage(
-            img.sequence[1], 32, 32)
-
-        self.assertImage(
-            img.sequence[2], 48, 48)
-
-        img.close()

@@ -12,10 +12,10 @@ source = os.path.join(os.path.dirname(__file__), 'fixtures/logo.svg')
 class TestCollecter(TestCase):
 
     def assertImage(self, img, width, height, format=None):
-        self.assertEqual(img.width, width)
-        self.assertEqual(img.height, height)
+        self.assertEqual(img['width'], width)
+        self.assertEqual(img['height'], height)
         if format:
-            self.assertEqual(img.format.lower(), format.lower())
+            self.assertEqual(img['format'].lower(), format.lower())
 
     def test_all_logos_are_collected(self):
         component = LogoConfig(source)
