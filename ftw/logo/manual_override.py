@@ -2,7 +2,6 @@ from ftw.logo import _
 from ftw.logo.logoconfig import IconConfigOverride
 from ftw.logo.logoconfig import LogoConfigOverride
 from plone.dexterity.browser import edit
-from plone.dexterity.content import Item
 from plone.dexterity.utils import createContentInContainer
 from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
@@ -111,21 +110,13 @@ class IManualOverrides(model.Schema):
     )
 
 
-class ManualOverrides(Item):
-    """A custom content class"""
-
-    def __init__(self, id=None):
-        super(ManualOverrides, self).__init__(id)
-        logo_overrides = None
-        icon_overrides = None
-
-
 @adapter(IManualOverrides, IObjectModifiedEvent)
 def overrides_changed(override_object, event):
     if override_object.logo_BASE:
         override_object.logo_overrides = LogoConfigOverride(override_object.logo_BASE)
     if override_object.icon_BASE:
         override_object.icon_overrides = IconConfigOverride(override_object.icon_BASE)
+
 
 class CreateOverridesIfReqdForm(BrowserView):
     """
@@ -176,4 +167,3 @@ class EditManualOverrideForm(edit.DefaultEditForm):
             return 'scaled_base_override'
         else:
             return 'zcml'
-            
