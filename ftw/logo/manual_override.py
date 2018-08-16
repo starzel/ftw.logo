@@ -8,12 +8,18 @@ from plone.supermodel import model
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 import transaction
+from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.interface import Invalid
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 
 OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
+# Annotations keys
+LOGO_OVERRIDES_KEY = 'ftw.logo.logo_overrides'
+ICON_OVERRIDES_KEY = 'ftw.logo.icon_overrides'
+OVERRIDES_KEY_PATTERN = 'ftw.logo.{}_overrides'
+
 
 def svg_file_only(value):
     if value.contentType != 'image/svg+xml':
@@ -112,10 +118,11 @@ class IManualOverrides(model.Schema):
 
 @adapter(IManualOverrides, IObjectModifiedEvent)
 def overrides_changed(override_object, event):
+    annotations = IAnnotations(override_object)
     if override_object.logo_BASE:
-        override_object.logo_overrides = LogoConfigOverride(override_object.logo_BASE)
+        annotations[LOGO_OVERRIDES_KEY] = LogoConfigOverride(override_object.logo_BASE)
     if override_object.icon_BASE:
-        override_object.icon_overrides = IconConfigOverride(override_object.icon_BASE)
+        annotations[ICON_OVERRIDES_KEY] = IconConfigOverride(override_object.icon_BASE)
 
 
 class CreateOverridesIfReqdForm(BrowserView):

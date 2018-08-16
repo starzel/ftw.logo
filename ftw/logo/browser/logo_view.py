@@ -4,6 +4,7 @@ from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogo
 from ftw.logo.interfaces import ILogoConfig
 from ftw.logo.manual_override import OVERRIDES_FIXED_ID
+from ftw.logo.manual_override import OVERRIDES_KEY_PATTERN
 from ftw.logo.StringIOStreamIterator import StringIOStreamIterator
 from plone.app.layout.globals.interfaces import IViewView
 from plone.app.layout.navigation.interfaces import INavigationRoot
@@ -11,6 +12,7 @@ from plone.namedfile.browser import DisplayFile
 from Products.Five.browser import BrowserView
 from zExceptions import BadRequest
 from zExceptions import NotFound
+from zope.annotation.interfaces import IAnnotations
 from zope.component import getMultiAdapter
 from zope.interface import implementer
 from zope.publisher.interfaces import IPublishTraverse
@@ -64,7 +66,8 @@ class LogoView(BrowserView):
             # check if base logo/icon  has been overridden, then return the transformed BASE logo/icon
             base_field_name = '{}_BASE'.format(self.config_name)
             if getattr(overridesItem, base_field_name):
-                config = getattr(overridesItem, '{}_overrides'.format(self.config_name), None)
+                annotations = IAnnotations(overridesItem)
+                config = annotations.get(OVERRIDES_KEY_PATTERN.format(self.config_name), None)
                 if config:
                     return self.show_config_scale(config)
         if not field:
