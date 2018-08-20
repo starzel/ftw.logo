@@ -2,6 +2,8 @@ from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 import os
+from wand.exceptions import CorruptImageError
+from wand.image import Image
 
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
 custom = os.path.join(source_path, 'custom.svg')
@@ -11,13 +13,42 @@ class TestLogoView(FunctionalTestCase):
 
     @browsing
     def test_logo_view(self, browser):
-        browser.login().visit(self.portal, view='@@logo/logo/BASE')
+        browser.visit(self.portal, view='@@logo/logo/BASE')
         self.assertEqual(200, browser.status_code)
+        try:
+            im = Image(blob=browser.contents, format='svg')
+        except CorruptImageError:
+            self.fail("Image is incorrect format - expected svg")
 
     @browsing
     def test_icon_view(self, browser):
-        browser.login().visit(self.portal, view='@@logo/icon/BASE')
+        browser.visit(self.portal, view='@@logo/icon/BASE')
         self.assertEqual(200, browser.status_code)
+        try:
+            im = Image(blob=browser.contents, format='svg')
+        except CorruptImageError:
+            self.fail("Image is incorrect format - expected svg")
+
+    @browsing
+    def test_logo_scale(self, browser):
+        browser.visit(self.portal, view='@@logo/logo/MOBILE_LOGO')
+        self.assertEqual(200, browser.status_code)
+        try:
+            im = Image(blob=browser.contents, format='png')
+        except CorruptImageError:
+            self.fail("Image is incorrect format - expected png")
+        self.assertEqual(50, im.height)
+
+    @browsing
+    def test_icon_scale(self, browser):
+        browser.visit(self.portal, view='@@logo/icon/ANDROID_192X192')
+        self.assertEqual(200, browser.status_code)
+        try:
+            im = Image(blob=browser.contents, format='png')
+        except CorruptImageError:
+            self.fail("Image is incorrect format - expected png")
+        self.assertEqual(192, im.height)
+        self.assertEqual(192, im.width)
 
     @browsing
     def test_not_found(self, browser):
