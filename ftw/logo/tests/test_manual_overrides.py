@@ -3,6 +3,12 @@ from ftw.builder import create
 from ftw.logo.manual_override import OVERRIDES_FIXED_ID
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
+import os
+
+source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
+custom_svg = os.path.join(source_path, 'custom.svg')
+green_png = os.path.join(source_path, 'green.png')
+
 
 class TestManualOverrides(FunctionalTestCase):
     #layer = LOGO_FUNCTIONAL
@@ -47,14 +53,26 @@ class TestManualOverrides(FunctionalTestCase):
         self.grant('Site Administrator')
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
         self.assertEqual(200, browser.status_code)
+        with open(custom_svg) as svg_file:
+            browser.fill({'SVG base logo': svg_file}).submit()
+
         # TODO conversion to PNG
         # Test view of PNG
         # TODO test fallback if overrides not set
         # TODO test overrides *publicly* visible too
-        pass
 
-    def test_form_validation(self):
-        pass
+        # Test ZCML 'bypass'
 
-    def test_zcml_bypass(self):
-        pass
+
+    @browsing
+    def test_form_validation(self, browser):
+        self.grant('Site Administrator')
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(green_png) as png_file:
+            browser.fill({'SVG base logo': png_file}).submit()
+        self.assertIn('This image must be a SVG file (image/png supplied)', browser.contents)
+
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(custom_svg) as svg_file:
+            browser.fill({'Apple touch icon': svg_file}).submit()
+        self.assertIn('This image must be a PNG file (image/svg+xml supplied)', browser.contents)
