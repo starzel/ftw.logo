@@ -4,9 +4,12 @@ from ftw.logo.manual_override import OVERRIDES_FIXED_ID
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 import os
+from plone.app.layout.navigation.interfaces import INavigationRoot
+import transaction
 from wand.color import Color
 from wand.exceptions import CorruptImageError
 from wand.image import Image
+from zope.interface import alsoProvides
 
 
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
@@ -15,8 +18,6 @@ green_png = os.path.join(source_path, 'green.png')
 
 
 class TestManualOverrides(FunctionalTestCase):
-    #layer = LOGO_FUNCTIONAL
-
 
     @browsing
     def test_permission_for_overrides_form(self, browser):
@@ -49,6 +50,13 @@ class TestManualOverrides(FunctionalTestCase):
         folder = create(Builder('folder'))
         with browser.expect_http_error(code=404):
             browser.login().visit(folder, view='@@logo-and-icon-overrides')
+
+        # If we make the folder a navroot then we should be able to access the form on it
+        # FIXME - 500 from ComponentLookupError in LogoViewletETagValue
+        #alsoProvides(self.portal['folder'], INavigationRoot)
+        #transaction.commit()
+        #browser.visit(folder, view='@@logo-and-icon-overrides')
+        #self.assertEqual(200, browser.status_code)
 
 
     def verify_correct_image(self, browser, view, expected_format, expected_colour=None):
