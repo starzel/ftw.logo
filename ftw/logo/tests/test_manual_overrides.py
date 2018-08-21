@@ -5,10 +5,12 @@ from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 import os
 from plone.app.layout.navigation.interfaces import INavigationRoot
+from Products.CMFCore.utils import getToolByName
 import transaction
 from wand.color import Color
 from wand.exceptions import CorruptImageError
 from wand.image import Image
+from zope.annotation.interfaces import IAnnotations
 from zope.interface import alsoProvides
 
 
@@ -108,7 +110,6 @@ class TestManualOverrides(FunctionalTestCase):
         # TODO test icons similar to above
 
 
-
     @browsing
     def test_form_validation(self, browser):
         self.grant('Site Administrator')
@@ -121,3 +122,30 @@ class TestManualOverrides(FunctionalTestCase):
         with open(red_svg) as svg_file:
             browser.fill({'Apple touch icon': svg_file}).submit()
         self.assertIn('This image must be a PNG file (image/svg+xml supplied)', browser.contents)
+
+
+    @browsing
+    def test_uninstall_removes_annotations_removed(self, browser):
+
+        self.grant('Site Administrator')
+
+        # add some overrides
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(red_svg) as svg_file:
+            browser.fill({'SVG base logo': svg_file,
+                          'SVG base icon': svg_file}).submit()
+
+        # Check we have some annotations
+        override_obj = self.portal[OVERRIDES_FIXED_ID]
+        annotations = IAnnotations(override_obj)
+        self.assertGreater(len(annotations), 0, 'Sanity check annotations added')
+
+        # Uninstall
+        quick_installer_tool = getToolByName(self.layer['portal'],
+                                             'portal_quickinstaller')
+        quick_installer_tool.uninstallProducts(['ftw.logo'])
+
+        # check all annotations are gone
+        annotations = IAnnotations(override_obj)
+        self.assertEqual(len(annotations), 0, 'Uninstallation should remove all annotations')
+
