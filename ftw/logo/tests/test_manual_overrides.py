@@ -1,6 +1,7 @@
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.logo.manual_override import OVERRIDES_FIXED_ID
+from ftw.logo.testing import BLUE_BASE_LOGO_FUNCTIONAL
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 import os
@@ -13,13 +14,17 @@ from wand.image import Image
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import alsoProvides
 
+GREEN = '#0f0'
 
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
+blue_svg = os.path.join(source_path, 'blue.svg')
 red_svg = os.path.join(source_path, 'red.svg')
 green_png = os.path.join(source_path, 'green.png')
 
 
 class TestManualOverrides(FunctionalTestCase):
+    layer = BLUE_BASE_LOGO_FUNCTIONAL
+
 
     @browsing
     def test_permission_for_overrides_form(self, browser):
@@ -61,7 +66,16 @@ class TestManualOverrides(FunctionalTestCase):
         #self.assertEqual(200, browser.status_code)
 
 
-    def verify_correct_image(self, browser, view, expected_format, expected_colour=None):
+    def verify_correct_image(self, browser, view, expected_format, expected_color=None):
+        """
+        Verify that a logo/icon at a given view is as expected
+
+        expected_format ('png', 'svg' etc.)
+        expected_color - proves the *source* of the image by looking at the histogram
+            - we use ZCML to set the base SVG image to 100% 'blue'
+            - the TTW SVG (if set) is 100% 'red'
+            - the TTW PNG (if set) is 100% GREEN ('#0f0')
+        """
         # We logout to test images are *publicly* visible
         browser.logout()
         browser.visit(self.portal, view=view)
@@ -70,17 +84,23 @@ class TestManualOverrides(FunctionalTestCase):
             im = Image(blob=browser.contents, format=expected_format)
         except CorruptImageError:
             self.fail("Image is incorrect format - expected {}".format(expected_format))
-        if (expected_colour):
+        if (expected_color):
             # Determine the source (SVG, PNG) by using the colour
-            # Test that 90% of image is expected_colour
-            num_pixels = im.height * im.width
-            self.assertGreater(im.histogram[Color(expected_colour)], num_pixels * 0.9)
+            # Test that 90% of image is expected_color
+            total_pixels = im.height * im.width
+            im.alpha_channel = 'opaque'
+            try:
+                self.assertGreater(im.histogram[Color(expected_color)], total_pixels * 0.9)
+            except KeyError as e:
+                self.fail(("expected_color {} not found in image histogram\n"
+                           "First 5 colours were: {}").format(Color(expected_color), im.histogram.keys()[:5]))
         return im
 
 
     @browsing
-    def test_overrides(self, browser):
-        # test adding overrides
+    def test_logo_overrides(self, browser):
+        # We use primary colours to check the source of the scaled image
+
         self.grant('Site Administrator')
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
         self.assertEqual(200, browser.status_code)
@@ -88,26 +108,69 @@ class TestManualOverrides(FunctionalTestCase):
             browser.fill({'SVG base logo': svg_file}).submit()
 
         # Check SVG image is set
-        img = self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'red')
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'red')
         # Check conversion to PNG
         img = self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png', 'red')
         self.assertEqual(50, img.height)
-        # Check ZCML 'bypass'
-        img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png')
-        # TODO verify base SVG is shown
-        # TODO verify icons are unchanged
+        # Check ZCML 'bypass' - base SVG should be shown
+        img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png', 'blue')
+        self.assertEqual(50, img.height)
 
-        # Test PNG override
+        # verify icons are unaffected (i.e. still derive from base icon)
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
+
+        # Test PNG override (Note: we don't test dimensions as they are not enforced)
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
         with open(green_png) as png_file:
             browser.fill({'Mobile logo (PNG)': png_file}).submit()
-        img = self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png', '#0f0')
-        # Note dimensions of a PNG override are not enforced
-        # Check ZCML 'bypass'
-        img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png')
-        # TODO verify base SVG is shown
+        self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png', GREEN)
 
-        # TODO test icons similar to above
+        # Check ZCML 'bypass' - a scale of the base SVG should be shown
+        self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png', 'blue')
+
+        # verify icons are unaffected (i.e. still derive from base icon)
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
+
+
+    @browsing
+    def test_icon_overrides(self, browser):
+        # We use primary colours to check the source of the scaled image
+
+        self.grant('Site Administrator')
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        self.assertEqual(200, browser.status_code)
+        with open(red_svg) as svg_file:
+            browser.fill({'SVG base icon': svg_file}).submit()
+
+        # Check SVG image is set
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg', 'red')
+        # Check conversion to PNG
+        img = self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32', 'png', 'red')
+        self.assertEqual(32, img.height)
+        self.assertEqual(32, img.width)
+        # Check ZCML 'bypass' - a scale of the base SVG should be shown
+        img = self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32', 'png', 'blue')
+        self.assertEqual(32, img.height)
+        self.assertEqual(32, img.width)
+
+        # verify logos are unaffected (i.e. still derive from base logo)
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
+
+        # Test PNG override (Note: we don't test dimensions as they are not enforced)
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(green_png) as png_file:
+            browser.fill({'Favicon 32x32': png_file}).submit()
+        self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32', 'png', GREEN)
+
+        # Check ZCML 'bypass' - base SVG should be shown
+        self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32', 'png', 'blue')
+
+        # verify logos are unaffected (i.e. still derive from base logo)
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
 
 
     @browsing
