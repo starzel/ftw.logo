@@ -19,7 +19,7 @@ class AbstractConfig(object):
         self.scales[name] = scale
 
     def collect_scales(self, base_img):
-        raise NotImplemented()
+        raise NotImplemented()  # pragma: no cover
 
     def get_scale(self, name):
         return self.scales[name]

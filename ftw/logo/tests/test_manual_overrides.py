@@ -82,7 +82,7 @@ class TestManualOverrides(FunctionalTestCase):
         self.assertEqual(200, browser.status_code)
         try:
             im = Image(blob=browser.contents, format=expected_format)
-        except CorruptImageError:
+        except CorruptImageError:    # pragma: no cover
             self.fail("Image is incorrect format - expected {}".format(expected_format))
         if (expected_color):
             # Determine the source (SVG, PNG) by using the colour
@@ -91,7 +91,7 @@ class TestManualOverrides(FunctionalTestCase):
             im.alpha_channel = 'opaque'
             try:
                 self.assertGreater(im.histogram[Color(expected_color)], total_pixels * 0.9)
-            except KeyError as e:
+            except KeyError as e:    # pragma: no cover
                 self.fail(("expected_color {} not found in image histogram\n"
                            "First 5 colours were: {}").format(Color(expected_color), im.histogram.keys()[:5]))
         return im

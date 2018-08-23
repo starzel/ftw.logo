@@ -11,42 +11,31 @@ custom = os.path.join(source_path, 'custom.svg')
 
 class TestLogoView(FunctionalTestCase):
 
-    @browsing
-    def test_logo_view(self, browser):
-        browser.visit(self.portal, view='@@logo/logo/BASE')
+    def verify_image_format(self, browser, view, expected_format):
+        browser.visit(self.portal, view=view)
         self.assertEqual(200, browser.status_code)
         try:
-            im = Image(blob=browser.contents, format='svg')
-        except CorruptImageError:
-            self.fail("Image is incorrect format - expected svg")
+            im = Image(blob=browser.contents, format=expected_format)
+        except CorruptImageError:    # pragma: no cover
+            self.fail("Image is incorrect format - expected {}".format(expected_format))
+        return im
+
+    @browsing
+    def test_logo_view(self, browser):
+        self.verify_image_format(browser, '@@logo/logo/BASE', 'svg')
 
     @browsing
     def test_icon_view(self, browser):
-        browser.visit(self.portal, view='@@logo/icon/BASE')
-        self.assertEqual(200, browser.status_code)
-        try:
-            im = Image(blob=browser.contents, format='svg')
-        except CorruptImageError:
-            self.fail("Image is incorrect format - expected svg")
+        self.verify_image_format(browser, '@@logo/icon/BASE', 'svg')
 
     @browsing
     def test_logo_scale(self, browser):
-        browser.visit(self.portal, view='@@logo/logo/MOBILE_LOGO')
-        self.assertEqual(200, browser.status_code)
-        try:
-            im = Image(blob=browser.contents, format='png')
-        except CorruptImageError:
-            self.fail("Image is incorrect format - expected png")
+        im = self.verify_image_format(browser, '@@logo/logo/MOBILE_LOGO', 'png')
         self.assertEqual(50, im.height)
 
     @browsing
     def test_icon_scale(self, browser):
-        browser.visit(self.portal, view='@@logo/icon/ANDROID_192X192')
-        self.assertEqual(200, browser.status_code)
-        try:
-            im = Image(blob=browser.contents, format='png')
-        except CorruptImageError:
-            self.fail("Image is incorrect format - expected png")
+        im = self.verify_image_format(browser, '@@logo/icon/ANDROID_192X192', 'png')
         self.assertEqual(192, im.height)
         self.assertEqual(192, im.width)
 

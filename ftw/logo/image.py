@@ -9,14 +9,14 @@ class Image(Image):
         # behind format is a setter so the extension has to be kept seperately
         self.extension = kwargs.pop("extension", None)
         if self.filename and not os.path.isfile(self.filename):
-            raise ValueError('{} could not be found'.format(self.filename))
+            raise ValueError('{} could not be found'.format(self.filename))  # pragma: no cover
 
         super(Image, self).__init__(**kwargs)
         if self.filename:
             if self.extension is None:
                 _, extension = os.path.splitext(self.filename)
                 self.extension = extension.lstrip('.')
-                
+
             self.format = self.extension
 
         self._blob = None
