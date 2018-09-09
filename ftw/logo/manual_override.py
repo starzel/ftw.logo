@@ -29,6 +29,7 @@ def svg_file_only(value):
         )
     return True
 
+
 def png_file_only(value):
     if value.contentType != 'image/png':
         raise Invalid(
@@ -36,6 +37,7 @@ def png_file_only(value):
             u"({} supplied)".format(value.contentType)
         )
     return True
+
 
 class IManualOverrides(model.Schema):
 
@@ -46,71 +48,71 @@ class IManualOverrides(model.Schema):
     # default image
 
     logo_BASE = NamedBlobImage(
-        title = _(u"SVG base logo"),
-        description = _(u"Overriding the base logo will generate an override "
-                        u"for BOTH logos below if not already set."),
+        title=_(u"SVG base logo"),
+        description=_(u"Overriding the base logo will generate an override "
+                      u"for BOTH logos below if not already set."),
         required=False,
         constraint=svg_file_only,
     )
 
     logo_LOGO = NamedBlobImage(
-        title = _(u"Standard (desktop) logo (PNG)"),
+        title=_(u"Standard (desktop) logo (PNG)"),
         required=False,
         constraint=png_file_only,
     )
 
     logo_MOBILE_LOGO = NamedBlobImage(
-        title = _(u"Mobile logo (PNG)"),
+        title=_(u"Mobile logo (PNG)"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_BASE = NamedBlobImage(
-        title = _(u"SVG base icon"),
-        description = _(u"Overriding the base icon will generate an "
-                        u"override for ALL icons below if not already set."),
+        title=_(u"SVG base icon"),
+        description=_(u"Overriding the base icon will generate an "
+                      u"override for ALL icons below if not already set."),
         required=False,
         constraint=svg_file_only,
     )
 
     icon_APPLE_TOUCH_ICON = NamedBlobImage(
-        title = _(u"Apple touch icon"),
+        title=_(u"Apple touch icon"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_FAVICON_32X32 = NamedBlobImage(
-        title = _(u"Favicon 32x32"),
+        title=_(u"Favicon 32x32"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_FAVICON_16X16 = NamedBlobImage(
-        title = _(u"Favicon 16x16"),
+        title=_(u"Favicon 16x16"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_MSTILE_150X150 = NamedBlobImage(
-        title = _(u"Mstile icon 150x150"),
+        title=_(u"Mstile icon 150x150"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_ANDROID_192X192 = NamedBlobImage(
-        title = _(u"Android icon 192x192"),
+        title=_(u"Android icon 192x192"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_ANDROID_512X512 = NamedBlobImage(
-        title = _(u"Android icon 512x512"),
+        title=_(u"Android icon 512x512"),
         required=False,
         constraint=png_file_only,
     )
 
     icon_FAVICON = NamedBlobImage(
-        title = _(u"Favicon"),
+        title=_(u"Favicon"),
         required=False,
         constraint=png_file_only,
     )

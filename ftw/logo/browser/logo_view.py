@@ -7,7 +7,6 @@ from ftw.logo.manual_override import OVERRIDES_FIXED_ID
 from ftw.logo.manual_override import OVERRIDES_KEY_PATTERN
 from ftw.logo.StringIOStreamIterator import StringIOStreamIterator
 from plone.app.layout.globals.interfaces import IViewView
-from plone.app.layout.navigation.interfaces import INavigationRoot
 from plone.namedfile.browser import DisplayFile
 from Products.Five.browser import BrowserView
 from zExceptions import BadRequest
@@ -80,7 +79,6 @@ class LogoView(BrowserView):
         config = getMultiAdapter(
             (self.context, self.request), ILogo).get_config(self.config)
         return self.show_config_scale(config)
-
 
     def show_config_scale(self, config):
         scale = config.get_scale(self.scale)

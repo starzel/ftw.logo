@@ -7,6 +7,7 @@ from textwrap import wrap
 from zope.interface import implements
 from hashlib import sha256
 
+
 class AbstractConfig(object):
 
     def __init__(self, base):
@@ -41,6 +42,7 @@ class LogoConfig(AbstractConfig):
         for scale in SCALES['LOGOS']:
             self.add_scale(scale, convert(base_img, scale))
 
+
 class IconConfig(AbstractConfig):
     """Icon config entry.
     """
@@ -51,6 +53,7 @@ class IconConfig(AbstractConfig):
         for scale in SCALES['ICONS']:
             self.add_scale(scale, convert(base_img, scale))
 
+
 class AbstractConfigOverride(AbstractConfig):
 
     def __init__(self, blobImage):
@@ -58,6 +61,7 @@ class AbstractConfigOverride(AbstractConfig):
         self.cachekey = self.get_cachekey_from_blob(blobImage.data)
         self.scales = {}
         self.collect_scales(base_img)
+
 
 class LogoConfigOverride(AbstractConfigOverride):
     """Logo config (TTW) overrides.

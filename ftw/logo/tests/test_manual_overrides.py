@@ -25,7 +25,6 @@ green_png = os.path.join(source_path, 'green.png')
 class TestManualOverrides(FunctionalTestCase):
     layer = BLUE_BASE_LOGO_FUNCTIONAL
 
-
     @browsing
     def test_permission_for_overrides_form(self, browser):
 
@@ -49,7 +48,6 @@ class TestManualOverrides(FunctionalTestCase):
         browser.login().visit(self.portal[OVERRIDES_FIXED_ID])
         self.assertEqual(200, browser.status_code)
 
-
     @browsing
     def test_addable_only_on_navroots(self, browser):
         self.grant('Site Administrator')
@@ -60,11 +58,10 @@ class TestManualOverrides(FunctionalTestCase):
 
         # If we make the folder a navroot then we should be able to access the form on it
         # FIXME - 500 from ComponentLookupError in LogoViewletETagValue
-        #alsoProvides(self.portal['folder'], INavigationRoot)
-        #transaction.commit()
-        #browser.visit(folder, view='@@logo-and-icon-overrides')
-        #self.assertEqual(200, browser.status_code)
-
+        # alsoProvides(self.portal['folder'], INavigationRoot)
+        # transaction.commit()
+        # browser.visit(folder, view='@@logo-and-icon-overrides')
+        # self.assertEqual(200, browser.status_code)
 
     def verify_correct_image(self, browser, view, expected_format, expected_color=None):
         """
@@ -91,11 +88,10 @@ class TestManualOverrides(FunctionalTestCase):
             im.alpha_channel = 'opaque'
             try:
                 self.assertGreater(im.histogram[Color(expected_color)], total_pixels * 0.9)
-            except KeyError as e:    # pragma: no cover
+            except KeyError:    # pragma: no cover
                 self.fail(("expected_color {} not found in image histogram\n"
                            "First 5 colours were: {}").format(Color(expected_color), im.histogram.keys()[:5]))
         return im
-
 
     @browsing
     def test_logo_overrides(self, browser):
@@ -132,7 +128,6 @@ class TestManualOverrides(FunctionalTestCase):
         # verify icons are unaffected (i.e. still derive from base icon)
         self.verify_correct_image(browser, '@@logo/icon/BASE', 'png', 'blue')
         self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
-
 
     @browsing
     def test_icon_overrides(self, browser):
@@ -172,7 +167,6 @@ class TestManualOverrides(FunctionalTestCase):
         self.verify_correct_image(browser, '@@logo/logo/BASE', 'png', 'blue')
         self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
 
-
     @browsing
     def test_form_validation(self, browser):
         self.grant('Site Administrator')
@@ -185,7 +179,6 @@ class TestManualOverrides(FunctionalTestCase):
         with open(red_svg) as svg_file:
             browser.fill({'Apple touch icon': svg_file}).submit()
         self.assertIn('This image must be a PNG file (image/svg+xml supplied)', browser.contents)
-
 
     @browsing
     def test_uninstall_removes_annotations_removed(self, browser):
@@ -211,4 +204,3 @@ class TestManualOverrides(FunctionalTestCase):
         # check all annotations are gone
         annotations = IAnnotations(override_obj)
         self.assertEqual(len(annotations), 0, 'Uninstallation should remove all annotations')
-

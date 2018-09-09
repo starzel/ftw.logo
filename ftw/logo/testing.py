@@ -15,6 +15,7 @@ from zope.configuration import xmlconfig
 source_path = os.path.join(os.path.dirname(__file__), 'tests', 'fixtures')
 blue_svg = os.path.join(source_path, 'blue.svg')
 
+
 class MetaZCMLLayer(ComponentRegistryLayer):
 
     def setUp(self):

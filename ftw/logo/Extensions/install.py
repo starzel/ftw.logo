@@ -13,6 +13,7 @@ def uninstall(self):
         'profile-ftw.logo:uninstall',
         ignore_dependencies=True)
 
+
 def clean_up_content_annotations(portal):
     """
     Remove objects from content annotations in Plone site,
