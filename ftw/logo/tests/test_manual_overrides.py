@@ -2,6 +2,7 @@ from ftw.builder import Builder
 from ftw.builder import create
 from ftw.logo.manual_override import OVERRIDES_FIXED_ID
 from ftw.logo.testing import BLUE_BASE_LOGO_FUNCTIONAL
+from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 import os
@@ -204,3 +205,36 @@ class TestManualOverrides(FunctionalTestCase):
         # check all annotations are gone
         annotations = IAnnotations(override_obj)
         self.assertEqual(len(annotations), 0, 'Uninstallation should remove all annotations')
+
+    def assertDistinctETags(self, etagList, extra_msg=''):
+        if len(etagList) != len(set(etagList)):
+            self.fail("ETag values are not distinct {} {}".format(etagList, extra_msg))
+
+    @browsing
+    def test_etag_for_overrides(self, browser):
+        """
+        Test that the etag changes for each change of configuration, so caching works
+        """
+        self.grant('Site Administrator')
+        etagValues = []
+        etagValues.append(get_etag_value_for(self.portal, self.request))
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(red_svg) as svg_file:
+            browser.fill({'SVG base icon': svg_file}).submit()
+
+        etagValues.append(get_etag_value_for(self.portal, self.request))
+        self.assertDistinctETags(etagValues, 'after overriding base SVG icon')
+
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(green_png) as png_file:
+            browser.fill({'Favicon 32x32': png_file}).submit()
+
+        etagValues.append(get_etag_value_for(self.portal, self.request))
+        self.assertDistinctETags(etagValues, 'after overriding PNG icon')
+
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        with open(green_png) as png_file:
+            browser.fill({'Android icon 512x512': png_file}).submit()
+
+        etagValues.append(get_etag_value_for(self.portal, self.request))
+        self.assertDistinctETags(etagValues, 'after overriding a second PNG icon')

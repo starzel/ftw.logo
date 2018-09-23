@@ -1,8 +1,12 @@
 from ftw.logo import _
 from ftw.logo.logoconfig import IconConfigOverride
 from ftw.logo.logoconfig import LogoConfigOverride
+from ftw.logo.logoconfig import get_cachekey_from_blob
+from hashlib import sha256
 from plone.dexterity.browser import edit
 from plone.dexterity.utils import createContentInContainer
+from plone.dexterity.utils import iterSchemata
+from plone.namedfile.field import INamedBlobImage
 from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
 from Products.Five.browser import BrowserView
@@ -12,12 +16,14 @@ from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.interface import Invalid
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.schema import getFieldsInOrder
 
 
 OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
 # Annotations keys
 LOGO_OVERRIDES_KEY = 'ftw.logo.logo_overrides'
 ICON_OVERRIDES_KEY = 'ftw.logo.icon_overrides'
+BLOB_CACHEKEY = 'ftw.logo.blob_cachekey'
 OVERRIDES_KEY_PATTERN = 'ftw.logo.{}_overrides'
 
 
@@ -126,6 +132,20 @@ def overrides_changed(override_object, event):
     if override_object.icon_BASE:
         annotations[ICON_OVERRIDES_KEY] = IconConfigOverride(override_object.icon_BASE)
 
+    # calculate a cachekey combining all blob fields in this object
+    cachekey = sha256()
+    for schemata in iterSchemata(override_object):
+        for name, field in getFieldsInOrder(schemata):
+            try:
+                value = field.get(schemata(override_object))
+                if value is not field.missing_value and field.schema == INamedBlobImage:
+                    blobdata = field.get(override_object).data
+                    cachekey.update("|{}".format(get_cachekey_from_blob(blobdata)))
+                    continue
+            except AttributeError:
+                pass
+            cachekey.update("|")
+    annotations[BLOB_CACHEKEY] = cachekey.hexdigest()
 
 class CreateOverridesIfReqdForm(BrowserView):
     """

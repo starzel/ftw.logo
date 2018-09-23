@@ -7,12 +7,18 @@ from textwrap import wrap
 from zope.interface import implements
 from hashlib import sha256
 
+def get_cachekey_from_blob(blob):
+    cachekey = sha256()
+    for chunk in wrap(blob, 4096):
+        cachekey.update(chunk)
+    return cachekey.hexdigest()
+
 
 class AbstractConfig(object):
 
     def __init__(self, base):
         base_img = Image(filename=base)
-        self.cachekey = self.get_cachekey_from_blob(base_img.make_blob())
+        self.cachekey = get_cachekey_from_blob(base_img.make_blob())
         self.scales = {}
         self.collect_scales(base_img)
 
@@ -24,12 +30,6 @@ class AbstractConfig(object):
 
     def get_scale(self, name):
         return self.scales[name]
-
-    def get_cachekey_from_blob(self, blob):
-        cachekey = sha256()
-        for chunk in wrap(blob, 4096):
-            cachekey.update(chunk)
-        return cachekey.hexdigest()
 
 
 class LogoConfig(AbstractConfig):
@@ -58,7 +58,7 @@ class AbstractConfigOverride(AbstractConfig):
 
     def __init__(self, blobImage):
         base_img = Image(blob=blobImage.data, format='svg')
-        self.cachekey = self.get_cachekey_from_blob(blobImage.data)
+        self.cachekey = get_cachekey_from_blob(blobImage.data)
         self.scales = {}
         self.collect_scales(base_img)
 
