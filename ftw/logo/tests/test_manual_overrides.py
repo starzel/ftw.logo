@@ -114,7 +114,7 @@ class TestManualOverrides(FunctionalTestCase):
         self.assertEqual(50, img.height)
 
         # verify icons are unaffected (i.e. still derive from base icon)
-        self.verify_correct_image(browser, '@@logo/icon/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg', 'blue')
         self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
@@ -127,7 +127,7 @@ class TestManualOverrides(FunctionalTestCase):
         self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png', 'blue')
 
         # verify icons are unaffected (i.e. still derive from base icon)
-        self.verify_correct_image(browser, '@@logo/icon/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg', 'blue')
         self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
 
     @browsing
@@ -152,7 +152,7 @@ class TestManualOverrides(FunctionalTestCase):
         self.assertEqual(32, img.width)
 
         # verify logos are unaffected (i.e. still derive from base logo)
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'blue')
         self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
@@ -165,7 +165,7 @@ class TestManualOverrides(FunctionalTestCase):
         self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32', 'png', 'blue')
 
         # verify logos are unaffected (i.e. still derive from base logo)
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'blue')
         self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
 
     @browsing
