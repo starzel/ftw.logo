@@ -44,12 +44,19 @@ class LogoView(BrowserView):
         elif self.config and name in flatten_scales(SCALES):
             self.scale = name
             return self
+        elif self.config and name == 'get_logo':
+            self.scale = name
+            return self
         else:
             raise NotFound()
 
     def __call__(self):
         if not self.config or not self.scale:
             raise BadRequest()
+
+        if self.scale == 'get_logo':
+            return self.handle_get_logo()
+
         check_overrides = not self.zcml_only
         return ((check_overrides and self.get_dx_overridden_image()) or
                 self.get_zcml_configured_image())
@@ -98,3 +105,26 @@ class LogoView(BrowserView):
             # http://stackoverflow.com/a/3001556/880628
             response.setHeader('Cache-Control', 'public, max-age=31536000')
         return iterator
+
+    def handle_get_logo(self):
+        if self.has_dx_logo() and not self.has_dx_base():
+            self.scale = 'LOGO'
+            return self.get_dx_overridden_image()
+        elif self.has_dx_base():
+            self.scale = 'BASE'
+            return self.get_dx_overridden_image()
+        else:
+            self.scale = 'BASE'
+            return self.get_zcml_configured_image()
+
+    def has_dx_logo(self):
+        overridesItem = self.context.get(OVERRIDES_FIXED_ID)
+        if not overridesItem:
+            return False
+        return bool(overridesItem.logo_LOGO)
+
+    def has_dx_base(self):
+        overridesItem = self.context.get(OVERRIDES_FIXED_ID)
+        if not overridesItem:
+            return False
+        return bool(overridesItem.logo_BASE)

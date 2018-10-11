@@ -7,6 +7,7 @@ from wand.image import Image
 
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
 custom = os.path.join(source_path, 'custom.svg')
+png = os.path.join(source_path, 'green.png')
 
 
 class TestLogoView(FunctionalTestCase):
@@ -62,3 +63,33 @@ class TestLogoView(FunctionalTestCase):
         self.assertNotEqual(
             before,
             after)
+
+    @browsing
+    def test_special_get_logo_scale_name_returns_svg_by_default(self, browser):
+        self.verify_image_format(browser, '@@logo/logo/get_logo', 'svg')
+        self.grant('Site Administrator')
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+
+        with open(png) as green_png:
+            browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
+            self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
+
+    @browsing
+    def test_special_get_logo_scale_name_returns_uploaded_png(self, browser):
+        self.verify_image_format(browser, '@@logo/logo/get_logo', 'svg')
+        self.grant('Site Administrator')
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+
+        with open(png) as green_png:
+            browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
+            self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
+
+    @browsing
+    def test_special_get_logo_scale_name_returns_uploaded_svg(self, browser):
+        self.verify_image_format(browser, '@@logo/logo/get_logo', 'svg')
+        self.grant('Site Administrator')
+        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+
+        with open(png) as green_png:
+            browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
+            self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
