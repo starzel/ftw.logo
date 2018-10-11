@@ -18,4 +18,9 @@
     manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
     layer="ftw.logo.interfaces.IFtwLogo" />
 
+  <browser:resourceDirectory
+      name="ftw.logo"
+      directory="static"
+      />
+
 </configure>

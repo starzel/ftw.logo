@@ -2,6 +2,8 @@ from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 import os
+from wand.exceptions import CorruptImageError
+from wand.image import Image
 
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
 custom = os.path.join(source_path, 'custom.svg')
@@ -9,15 +11,33 @@ custom = os.path.join(source_path, 'custom.svg')
 
 class TestLogoView(FunctionalTestCase):
 
+    def verify_image_format(self, browser, view, expected_format):
+        browser.visit(self.portal, view=view)
+        self.assertEqual(200, browser.status_code)
+        try:
+            im = Image(blob=browser.contents, format=expected_format)
+        except CorruptImageError:    # pragma: no cover
+            self.fail("Image is incorrect format - expected {}".format(expected_format))
+        return im
+
     @browsing
     def test_logo_view(self, browser):
-        browser.login().visit(self.portal, view='@@logo/logo/BASE')
-        self.assertEqual(200, browser.status_code)
+        self.verify_image_format(browser, '@@logo/logo/BASE', 'svg')
 
     @browsing
     def test_icon_view(self, browser):
-        browser.login().visit(self.portal, view='@@logo/icon/BASE')
-        self.assertEqual(200, browser.status_code)
+        self.verify_image_format(browser, '@@logo/icon/BASE', 'svg')
+
+    @browsing
+    def test_logo_scale(self, browser):
+        im = self.verify_image_format(browser, '@@logo/logo/MOBILE_LOGO', 'png')
+        self.assertEqual(50, im.height)
+
+    @browsing
+    def test_icon_scale(self, browser):
+        im = self.verify_image_format(browser, '@@logo/icon/ANDROID_192X192', 'png')
+        self.assertEqual(192, im.height)
+        self.assertEqual(192, im.width)
 
     @browsing
     def test_not_found(self, browser):
@@ -39,9 +59,6 @@ class TestLogoView(FunctionalTestCase):
         '''.format(custom))
         after = get_etag_value_for(self.portal, self.request)
 
-        self.assertEqual(
+        self.assertNotEqual(
             before,
-            '9c47ee8dea9b4760b34da6ce7c6bbfb46a7f5583f2200e957dad60541b66ffa7')
-        self.assertEqual(
-            after,
-            '49d730c981585fdffafccc1d3a8b38e987bb9146005f183417ec504ed1a997e4')
+            after)

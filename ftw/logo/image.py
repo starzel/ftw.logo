@@ -4,29 +4,27 @@ import os
 
 class Image(Image):
 
-    def __init__(self, filename, extension=None):
-        if not os.path.isfile(filename):
-            raise ValueError('{} could not be found'.format(filename))
-
-        self.filename = filename
-        super(Image, self).__init__(filename=self.filename)
-
-        if extension is None:
-            filename, extension = os.path.splitext(filename)
-            # from pdb import set_trace; set_trace()
-            self.extension = extension.lstrip('.')
-        else:
-            self.extension = extension
-
+    def __init__(self, **kwargs):
+        self.filename = kwargs.get("filename", None)
         # behind format is a setter so the extension has to be kept seperately
-        self.format = self.extension
+        self.extension = kwargs.pop("extension", None)
+        if self.filename and not os.path.isfile(self.filename):
+            raise ValueError('{} could not be found'.format(self.filename))  # pragma: no cover
+
+        super(Image, self).__init__(**kwargs)
+        if self.filename:
+            if self.extension is None:
+                _, extension = os.path.splitext(self.filename)
+                self.extension = extension.lstrip('.')
+
+            self.format = self.extension
 
         self._blob = None
 
     def make_blob(self):
         if self._blob:
             return self._blob
-        if self.extension == 'svg':
+        if self.extension == 'svg' and self.filename:
             # If the target extension is svg, and we assume that the input data is also svg,
             # we don't need to transform anything, but we can simply return the original data
             # read from self.filename.
@@ -36,7 +34,6 @@ class Image(Image):
                 self._blob = f.read()
         else:
             self._blob = super(Image, self).make_blob(self.extension)
-        self.close()
         return self._blob
 
     def append(self, other):
