@@ -19,3 +19,18 @@ class TestLogoViewlet(FunctionalTestCase):
             map(lambda x: x.attrib['src'], browser.css('.portal-logo > img')),
             ['http://nohost/plone/@@logo/logo/BASE?r={}'.format(etag)],
         )
+
+    @browsing
+    def test_mobile_logo_tag(self, browser):
+        etag = get_etag_value_for(self.portal, self.request)
+        browser.login().visit(self.portal)
+
+        self.assertEqual(
+            map(lambda x: x.attrib['href'], browser.css('.portal-logo')),
+            ['http://nohost/plone'],
+        )
+
+        self.assertEqual(
+            map(lambda x: x.attrib['src'], browser.css('.portal-mobilelogo > img')),
+            ['http://nohost/plone/@@logo/logo/MOBILE_LOGO?r={}'.format(etag)],
+        )
