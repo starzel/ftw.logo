@@ -8,4 +8,10 @@
    <img tal:attributes="src string:${view/navigation_root_url}/@@logo/logo/BASE?r=${view/cachekey}" />
 </a>
 
+<a tal:attributes="href view/navigation_root_url"
+   class="portal-mobilelogo">
+   <img tal:attributes="src string:${view/navigation_root_url}/@@logo/logo/MOBILE_LOGO?r=${view/cachekey}" />
+</a>
+
+
 </html>
