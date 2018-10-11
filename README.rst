@@ -18,6 +18,23 @@ Prerequisites
 
 See `wand.py dependencies <http://docs.wand-py.org/en/0.4.4/index.html#requirements>`_
 
+
+OSX (High Sierra)
+-----------------
+
+Two important points for developers.
+
+If you experience problems converting some svg's to png's, like getting a all transparent
+PNG. Install imagemagick with librsvg. Also don't install imagemagick version 7. Not gonna work.
+
+::
+     brew install imagemagick@6 --with-librsvg
+     brew link imagemagick@6 --force
+
+
+Also make sure `/usr/local/opt/imagemagick@6/bin` is in the PATH
+
+
 Installation
 ============
 
