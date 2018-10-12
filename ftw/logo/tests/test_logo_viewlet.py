@@ -11,12 +11,12 @@ class TestLogoViewlet(FunctionalTestCase):
         browser.login().visit(self.portal)
 
         self.assertEqual(
-            map(lambda x: x.attrib['href'], browser.css('.portal-logo')),
+            map(lambda x: x.attrib['href'], browser.css('#portal-logo')),
             ['http://nohost/plone'],
         )
 
         self.assertEqual(
-            map(lambda x: x.attrib['src'], browser.css('.portal-logo > img')),
+            map(lambda x: x.attrib['src'], browser.css('#portal-logo > img')),
             ['http://nohost/plone/@@logo/logo/BASE?r={}'.format(etag)],
         )
 
@@ -26,11 +26,11 @@ class TestLogoViewlet(FunctionalTestCase):
         browser.login().visit(self.portal)
 
         self.assertEqual(
-            map(lambda x: x.attrib['href'], browser.css('.portal-logo')),
+            map(lambda x: x.attrib['href'], browser.css('#portal-mobilelogo')),
             ['http://nohost/plone'],
         )
 
         self.assertEqual(
-            map(lambda x: x.attrib['src'], browser.css('.portal-mobilelogo > img')),
+            map(lambda x: x.attrib['src'], browser.css('#portal-mobilelogo > img')),
             ['http://nohost/plone/@@logo/logo/MOBILE_LOGO?r={}'.format(etag)],
         )

@@ -2,5 +2,6 @@
 <metadata>
     <dependencies>
         <dependency>profile-ftw.upgrade:default</dependency>
+        <dependency>profile-ftw.theming:default</dependency>
     </dependencies>
 </metadata>

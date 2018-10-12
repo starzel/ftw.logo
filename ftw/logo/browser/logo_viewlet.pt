@@ -4,12 +4,12 @@
       i18n:domain="ftw.logo">
 
 <a tal:attributes="href view/navigation_root_url"
-   class="portal-logo">
+   id="portal-logo">
    <img tal:attributes="src string:${view/navigation_root_url}/@@logo/logo/BASE?r=${view/cachekey}" />
 </a>
 
 <a tal:attributes="href view/navigation_root_url"
-   class="portal-mobilelogo">
+   id="portal-mobilelogo">
    <img tal:attributes="src string:${view/navigation_root_url}/@@logo/logo/MOBILE_LOGO?r=${view/cachekey}" />
 </a>
 

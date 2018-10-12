@@ -47,6 +47,7 @@ setup(
         'Plone',
         'setuptools',
         'ftw.upgrade',
+        'ftw.theming',
         'wand',
         'plone.api',
     ],
