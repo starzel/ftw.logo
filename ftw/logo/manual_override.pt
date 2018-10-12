@@ -39,7 +39,7 @@
                     </metal:field>
                   </td>
                   <td class="direct-or-scaled-override">
-                    <tal:if condition="widget/filename">
+                    <tal:if condition="python: origin_class == 'scaled_base_override' or widget.filename">
                       <p tal:condition="python: origin_class == 'scaled_base_override'"
                          class="scaled-override-expl explanation">
                           Note: The image below is a scale of the 'SVG base override' above.
