@@ -81,6 +81,7 @@ The available scales are:
    - LOGO
    - MOBILE_LOGO
    - BASE
+   - get_logo (virtual)
 - ICONS
    - APPLE_TOUCH_ICON
    - FAVICON_32X32
@@ -90,6 +91,14 @@ The available scales are:
    - ANDROID_512X512
    - FAVICON
    - BASE
+
+
+"get_logo" scale
+--------------
+
+The get_logo virtual scale returns either the BASE (svg from ZCML) or if available the overridden
+BASE or LOGO scale from the Dexterity content type.
+
 
 Converter
 =========
