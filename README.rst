@@ -143,6 +143,19 @@ The next block will override the previous config.
 
    <logo:logo base="custom_logo.svg" layer="your.product.interfaces.IYourProductLayer" />
 
+
+It's also possible to define a pre scaled image for `logo`, `mobile` and `favicon`.
+
+.. code-block:: xml
+
+   <logo:logo base="logo.svg" logo="logo.png" mobile="mobile.png" />
+   <logo:icon base="icon.svg" favicon="favicon.ico" />
+
+
+Please remember a base svg is required anyway. If you can't supply one, simply put in a transparent empty svg.
+If you dont't have one you can use the one from this package, which is located in the resources folder. It's called min.svg.
+
+
 Logo View
 =========
 

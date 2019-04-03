@@ -3,29 +3,53 @@ from ftw.logo.converter import SCALES
 from ftw.logo.image import Image
 from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogoConfig
-from textwrap import wrap
-from zope.interface import implements
 from hashlib import sha256
+from textwrap import wrap
+from zope.configuration.exceptions import ConfigurationError
+from zope.interface import implements
 
-def get_cachekey_from_blob(blob):
+
+def get_cachekey_from_blob(*args):
     cachekey = sha256()
-    for chunk in wrap(blob, 4096):
-        cachekey.update(chunk)
+    for blob in args:
+        if blob:
+            for chunk in wrap(blob, 4096):
+                cachekey.update(chunk)
     return cachekey.hexdigest()
 
 
 class AbstractConfig(object):
 
-    def __init__(self, base):
-        base_img = Image(filename=base)
-        self.cachekey = get_cachekey_from_blob(base_img.make_blob())
+    base = None
+    logo = None
+    mobile = None
+    favicon = None
+
+    def __init__(self, **kwargs):
+        if 'base' not in kwargs:
+            raise ConfigurationError('A base svg is required')
+
+        self.base = Image(filename=kwargs['base'])
+
+        if 'logo' in kwargs:
+            self.logo = Image(filename=kwargs['logo'])
+        if 'mobile' in kwargs:
+            self.mobile = Image(filename=kwargs['mobile'])
+        if 'favicon' in kwargs:
+            self.favicon = Image(filename=kwargs['favicon'])
+
+        self.cachekey = get_cachekey_from_blob(
+            self.base.make_blob(),
+            self.logo and self.logo.make_blob() or None,
+            self.mobile and self.mobile.make_blob() or None,
+            self.favicon and self.favicon.make_blob() or None,)
         self.scales = {}
-        self.collect_scales(base_img)
+        self.collect_scales()
 
     def add_scale(self, name, scale):
         self.scales[name] = scale
 
-    def collect_scales(self, base_img):
+    def collect_scales(self):
         raise NotImplemented()  # pragma: no cover
 
     def get_scale(self, name):
@@ -38,9 +62,12 @@ class LogoConfig(AbstractConfig):
 
     implements(ILogoConfig)
 
-    def collect_scales(self, base_img):
+    def collect_scales(self):
         for scale in SCALES['LOGOS']:
-            self.add_scale(scale, convert(base_img, scale))
+            if getattr(self, scale.lower(), None):
+                self.add_scale(scale, convert(getattr(self, scale.lower()), scale))
+            else:
+                self.add_scale(scale, convert(self.base, scale))
 
 
 class IconConfig(AbstractConfig):
@@ -49,9 +76,12 @@ class IconConfig(AbstractConfig):
 
     implements(IIconConfig)
 
-    def collect_scales(self, base_img):
+    def collect_scales(self):
         for scale in SCALES['ICONS']:
-            self.add_scale(scale, convert(base_img, scale))
+            if getattr(self, scale.lower(), None):
+                self.add_scale(scale, convert(getattr(self, scale.lower()), scale))
+            else:
+                self.add_scale(scale, convert(self.base, scale))
 
 
 class AbstractConfigOverride(AbstractConfig):

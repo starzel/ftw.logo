@@ -21,7 +21,7 @@ class IIconConfig(Interface):
     """Adapter interface for logo customization adapter.
     """
 
-    def __init__(file):
+    def __init__():
         """Adapts the zope application.
         """
 
@@ -30,6 +30,6 @@ class ILogoConfig(Interface):
     """Adapter interface for logo customization adapter.
     """
 
-    def __init__(file):
+    def __init__():
         """Adapts the zope application.
         """
