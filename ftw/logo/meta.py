@@ -35,6 +35,14 @@ class ILogoDirective(Interface):
         title=u'Relative path to the mobile logo image file.',
         required=False)
 
+    height = schema.Text(
+        title=u'Relative path to the mobile logo image file.',
+        required=False)
+
+    mobile_height = schema.Text(
+        title=u'Relative path to the mobile logo image file.',
+        required=False)
+
 
 class IIconDirective(Interface):
 
