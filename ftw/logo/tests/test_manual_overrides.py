@@ -5,15 +5,13 @@ from ftw.logo.testing import BLUE_BASE_LOGO_FUNCTIONAL
 from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
-import os
-from plone.app.layout.navigation.interfaces import INavigationRoot
 from Products.CMFCore.utils import getToolByName
-import transaction
 from wand.color import Color
 from wand.exceptions import CorruptImageError
 from wand.image import Image
 from zope.annotation.interfaces import IAnnotations
-from zope.interface import alsoProvides
+import os
+
 
 GREEN = '#0f0'
 

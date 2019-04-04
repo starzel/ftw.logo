@@ -3,6 +3,7 @@ from ftw.logo.interfaces import ILogoConfig
 from ftw.logo.testing import META_ZCML
 from unittest2 import TestCase
 from zope.component import getMultiAdapter
+from zope.configuration.xmlconfig import ZopeXMLConfigurationError
 from zope.interface import implementer
 from zope.interface import Interface
 from zope.interface.verify import verifyObject
@@ -13,6 +14,9 @@ source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
 logo = os.path.join(source_path, 'logo.svg')
 icon = os.path.join(source_path, 'logo.svg')
 custom = os.path.join(source_path, 'custom.svg')
+
+logo_img = os.path.join(source_path, 'logo.png')
+mobile_img = os.path.join(source_path, 'mobile.png')
 
 
 class IDummyLayer(Interface):
@@ -29,6 +33,15 @@ class TestZCML(TestCase):
 
     def test_logo_component(self):
         self.load_zcml('<logo:logo base="{}" />'.format(logo))
+        registry = getMultiAdapter((None, None), ILogoConfig)
+        verifyObject(ILogoConfig, registry)
+
+    def test_logo_component_with_other_image_attr(self):
+        self.load_zcml('<logo:logo base="{}" logo="{}" />'.format(logo, logo_img))
+        registry = getMultiAdapter((None, None), ILogoConfig)
+        verifyObject(ILogoConfig, registry)
+
+        self.load_zcml('<logo:logo base="{}" mobile="{}" />'.format(logo, mobile_img))
         registry = getMultiAdapter((None, None), ILogoConfig)
         verifyObject(ILogoConfig, registry)
 
@@ -63,3 +76,16 @@ class TestZCML(TestCase):
         ) + lines + (
             '</configure>',
         )))
+
+    def test_fail_to_load_if_no_valid_attr_is_present(self):
+        with self.assertRaises(ZopeXMLConfigurationError):
+            self.load_zcml('<logo:logo />'.format(logo))
+
+        with self.assertRaises(ZopeXMLConfigurationError):
+            self.load_zcml('<logo:logo dummy="nothing" />'.format(logo))
+
+        with self.assertRaises(ZopeXMLConfigurationError):
+            self.load_zcml('<logo:icon />'.format(logo))
+
+        with self.assertRaises(ZopeXMLConfigurationError):
+            self.load_zcml('<logo:icon dummy="nothing" />'.format(logo))
