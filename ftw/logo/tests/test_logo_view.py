@@ -101,3 +101,20 @@ class TestLogoView(FunctionalTestCase):
         with open(png) as green_png:
             browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
             self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
+
+    def test_primary_logo_scale(self):
+        self.layer['load_zcml_string']('''
+        <configure
+            xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
+            i18n_domain="my.package"
+            package="ftw.logo.tests">
+            <logo:logo base="{}" primary_logo_scale="logo" />
+        </configure>
+        '''.format(custom))
+
+        # Simulate publishTraverse of '@@logo/logo/get_logo'
+        view = self.portal.restrictedTraverse('@@logo')
+        view.publishTraverse(view.request, u"logo")
+        view.publishTraverse(view.request, u"get_logo")
+        view()
+        self.assertEquals('LOGO', view.scale)

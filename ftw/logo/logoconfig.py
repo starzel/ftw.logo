@@ -24,6 +24,7 @@ class AbstractConfig(object):
     logo = None
     mobile = None
     favicon = None
+    primary_logo_scale = None
 
     def __init__(self, **kwargs):
         if 'base' not in kwargs:
@@ -45,6 +46,7 @@ class AbstractConfig(object):
             self.favicon and self.favicon.make_blob() or None,)
         self.scales = {}
         self.collect_scales()
+        self.set_primary_logo_scale(**kwargs)
 
     def add_scale(self, name, scale):
         self.scales[name] = scale
@@ -54,6 +56,10 @@ class AbstractConfig(object):
 
     def get_scale(self, name):
         return self.scales[name]
+
+    def set_primary_logo_scale(self, **kwargs):
+        if 'primary_logo_scale' in kwargs:
+            self.primary_logo_scale = kwargs['primary_logo_scale']
 
 
 class LogoConfig(AbstractConfig):

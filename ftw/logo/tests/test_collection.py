@@ -45,3 +45,8 @@ class TestCollecter(TestCase):
 
         self.assertImage(component.get_scale('BASE'), 1, 1, 'svg')
         self.assertImage(component.get_scale('MOBILE_LOGO'), 50, 50, 'png')
+
+    def test_primary_logo_scale(self):
+        component = LogoConfig(base=source, logo=img_source,
+                               primary_logo_scale='logo')
+        self.assertEquals('logo', component.primary_logo_scale)

@@ -148,12 +148,16 @@ It's also possible to define a pre scaled image for `logo`, `mobile` and `favico
 
 .. code-block:: xml
 
-   <logo:logo base="logo.svg" logo="logo.png" mobile="mobile.png" />
+   <logo:logo base="resources/min.svg"
+              logo="tests/fixtures/logo.png"
+              mobile="mobile.png"
+              primary_logo_scale="logo" />
+
    <logo:icon base="icon.svg" favicon="favicon.ico" />
 
 
 Please remember a base svg is required anyway. If you can't supply one, simply put in a transparent empty svg.
-If you dont't have one you can use the one from this package, which is located in the resources folder. It's called min.svg.
+If you dont't have one you can use the one from this package, which is located in the resources folder. It's called min.svg. Also set the primary_logo_scale to "logo", since ftw.logo always prefers the svg over all other scales.
 
 
 Logo View

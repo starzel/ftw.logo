@@ -115,6 +115,12 @@ class LogoView(BrowserView):
             return self.get_dx_overridden_image()
         else:
             self.scale = 'BASE'
+
+            config = getMultiAdapter(
+                (self.context, self.request), ILogo).get_config(self.config)
+            if config.primary_logo_scale:
+                self.scale = config.primary_logo_scale.upper()
+
             return self.get_zcml_configured_image()
 
     def has_dx_logo(self):

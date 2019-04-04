@@ -2,6 +2,7 @@ from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogoConfig
 from ftw.logo.logoconfig import IconConfig
 from ftw.logo.logoconfig import LogoConfig
+from zope import schema
 from zope.component.zcml import handler
 from zope.configuration import fields
 from zope.configuration.fields import GlobalInterface
@@ -27,6 +28,10 @@ class ILogoDirective(Interface):
         required=False)
 
     mobile = fields.Path(
+        title=u'Relative path to the mobile logo image file.',
+        required=False)
+
+    primary_logo_scale = schema.Text(
         title=u'Relative path to the mobile logo image file.',
         required=False)
 
