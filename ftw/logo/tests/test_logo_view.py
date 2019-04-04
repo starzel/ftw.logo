@@ -1,9 +1,10 @@
+from copy import deepcopy
+from ftw.logo import converter
 from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 from wand.exceptions import CorruptImageError
 from wand.image import Image
-from zope.interface import alsoProvides
 from zope.interface import Interface
 import os
 
@@ -19,6 +20,16 @@ class IDummyLayer(Interface):
 
 
 class TestLogoView(FunctionalTestCase):
+
+    def setUp(self):
+        super(TestLogoView, self).setUp()
+
+        # Isolate changes on SCALES
+        self.origin_scales = deepcopy(converter.SCALES)
+
+    def tearDown(self):
+        super(TestLogoView, self).tearDown()
+        converter.SCALES = self.origin_scales
 
     def verify_image_format(self, browser, view, expected_format):
         browser.visit(self.portal, view=view)
