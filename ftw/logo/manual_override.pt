@@ -6,15 +6,15 @@
       metal:use-macro="context/main_template/macros/master">
 
     <metal:block fill-slot="main">
-      <h1>Manually set site Logos and Icons</h1>
+      <h1 i18n:translate="">Manually set site Logos and Icons</h1>
       <metal:block use-macro="context/@@ploneform-macros/titlelessform" >
         <metal:field-slot fill-slot="fields">
           <table>
             <thead>
               <tr>
-                <th class="zcml-image">ZCML logos/icons</th>
+                <th class="zcml-image" i18n:translate="">ZCML logos/icons</th>
                 <th class="widget"></th>
-                <th class="dexterity-override">Manual Overrides</th>
+                <th class="dexterity-override" i18n:translate="">Manual Overrides</th>
               </tr>
             </thead>
             <tbody>
