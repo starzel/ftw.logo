@@ -147,6 +147,7 @@ def overrides_changed(override_object, event):
             cachekey.update("|")
     annotations[BLOB_CACHEKEY] = cachekey.hexdigest()
 
+
 class CreateOverridesIfReqdForm(BrowserView):
     """
     Create IManualOverrides if it does not exist and redirect to it's edit form
@@ -166,10 +167,14 @@ class CreateOverridesIfReqdForm(BrowserView):
             )
             transaction.get().commit()
 
-        self.request.response.redirect('{}/@@edit'.format(
+            self.request.response.redirect('{}/@@edit'.format(
+                overridesItem.absolute_url_path()
+            ))
+            return
+        self.request.response.redirect('{}/view'.format(
             overridesItem.absolute_url_path()
         ))
-        return ""
+        return
 
 
 class EditManualOverrideForm(edit.DefaultEditForm):
