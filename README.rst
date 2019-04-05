@@ -160,6 +160,13 @@ Please remember a base svg is required anyway. If you can't supply one, simply p
 If you dont't have one you can use the one from this package, which is located in the resources folder. It's called min.svg. Also set the primary_logo_scale to "logo", since ftw.logo always prefers the svg over all other scales.
 
 
+Change default height for logo and mobile scale by zcml:
+
+   <logo:logo base="resources/min.svg"
+              height="200"
+              mobile_height="30" />
+
+
 Logo View
 =========
 
