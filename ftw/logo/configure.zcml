@@ -83,6 +83,13 @@
       class=".manual_override.EditManualOverrideForm"
       permission="ftw.logo.OverrideSiteLogosAndIcons" />
 
+    <browser:page
+      for=".manual_override.IManualOverrides"
+      name="view"
+      template="manual_override_view.pt"
+      class=".manual_override.ManualOverrideView"
+      permission="ftw.logo.OverrideSiteLogosAndIcons" />
+
     <subscriber handler=".manual_override.overrides_changed" />
 
 </configure>

@@ -116,7 +116,8 @@ class TestManualOverrides(FunctionalTestCase):
         self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        overrides = self.portal[OVERRIDES_FIXED_ID]
+        browser.login().visit(overrides, view='@@edit')
         with open(green_png) as png_file:
             browser.fill({'Mobile logo (PNG)': png_file}).submit()
         self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png', GREEN)
@@ -154,7 +155,8 @@ class TestManualOverrides(FunctionalTestCase):
         self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        overrides = self.portal[OVERRIDES_FIXED_ID]
+        browser.login().visit(overrides, view='@@edit')
         with open(green_png) as png_file:
             browser.fill({'Favicon 32x32': png_file}).submit()
         self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32', 'png', GREEN)
@@ -169,12 +171,14 @@ class TestManualOverrides(FunctionalTestCase):
     @browsing
     def test_form_validation(self, browser):
         self.grant('Site Administrator')
+
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
         with open(green_png) as png_file:
             browser.fill({'SVG base logo': png_file}).submit()
         self.assertIn('This image must be a SVG file (image/png supplied)', browser.contents)
 
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        overrides = self.portal[OVERRIDES_FIXED_ID]
+        browser.login().visit(overrides, view='@@edit')
         with open(red_svg) as svg_file:
             browser.fill({'Apple touch icon': svg_file}).submit()
         self.assertIn('This image must be a PNG file (image/svg+xml supplied)', browser.contents)
@@ -223,14 +227,15 @@ class TestManualOverrides(FunctionalTestCase):
         etagValues.append(get_etag_value_for(self.portal, self.request))
         self.assertDistinctETags(etagValues, 'after overriding base SVG icon')
 
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        overrides = self.portal[OVERRIDES_FIXED_ID]
+        browser.login().visit(overrides, view='@@edit')
         with open(green_png) as png_file:
             browser.fill({'Favicon 32x32': png_file}).submit()
 
         etagValues.append(get_etag_value_for(self.portal, self.request))
         self.assertDistinctETags(etagValues, 'after overriding PNG icon')
 
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+        browser.login().visit(overrides, view='@@edit')
         with open(green_png) as png_file:
             browser.fill({'Android icon 512x512': png_file}).submit()
 
