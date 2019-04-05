@@ -1,74 +1,26 @@
-.portaltype-ftw-logo-manualoverrides #content table {
-  width: 100%;
+.portaltype-ftw-logo-manualoverrides {
+  .field-title-row {
+    background-color: $color-gray-light;
 
-  thead th {
-    background: lightgrey;
-    padding: 0.75em 0.5em;
-    font-size: 1.5em;
-  }
-
-  tbody th {
-    background: whitesmoke;
-    padding: 0.5em;
-    font-size: 1.25em;
-  }
-
-  table td {
-    border: aliceblue 1px solid;
-    padding: 1em;
-
-    &.zcml-image {
-      width: 40%;
-
-      > img {
-       max-width: 90%;
-        max-height: 90%;
-        margin: 1em auto;
-        display: block;
-      }
+    .field-title {
+      font-weight: bold;
     }
 
-    &.widget {
-      width: 20%;
-      .field > span > span {
-        display: none;
-      }
-    }
-
-    &.dexterity-override {
-      width: 40%;
-    }
   }
 
-  .field {
-     > label {
+  .widget {
+    .field > label, .namedblobimage-field > span img:first-child {
       display: none;
     }
-
-    > span > span {
-     float: right;
-      width: 64%;
-      display: block;
-    }
-
-    > img[width] {
-      width: 93%;
-    }
   }
 
-  .field-desc {
-    font-weight: 400;
-    font-size:   1em;
-    margin:      0.5em 0 0.25em;
-    font-style:  italic;
+  .explanation {
+    background-color: $color-warning;
+    border: 1px solid darken($color-warning, 20%);
+    padding: 1em;
   }
 
-  .scaled_base_override .explanation {
-    background: wheat;
-    padding: 0.5em;
-  }
 }
-
 
 #portal-mobilelogo {
   display: block;
