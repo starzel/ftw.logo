@@ -1,8 +1,9 @@
 from ftw.logo import _
+from ftw.logo.logoconfig import get_cachekey_from_blob
 from ftw.logo.logoconfig import IconConfigOverride
 from ftw.logo.logoconfig import LogoConfigOverride
-from ftw.logo.logoconfig import get_cachekey_from_blob
 from hashlib import sha256
+from plone.dexterity.browser.view import DefaultView
 from plone.dexterity.browser import edit
 from plone.dexterity.utils import createContentInContainer
 from plone.dexterity.utils import iterSchemata
@@ -11,12 +12,12 @@ from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-import transaction
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.interface import Invalid
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.schema import getFieldsInOrder
+import transaction
 
 
 OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
@@ -147,6 +148,7 @@ def overrides_changed(override_object, event):
             cachekey.update("|")
     annotations[BLOB_CACHEKEY] = cachekey.hexdigest()
 
+
 class CreateOverridesIfReqdForm(BrowserView):
     """
     Create IManualOverrides if it does not exist and redirect to it's edit form
@@ -166,25 +168,36 @@ class CreateOverridesIfReqdForm(BrowserView):
             )
             transaction.get().commit()
 
-        self.request.response.redirect('{}/@@edit'.format(
+            self.request.response.redirect('{}/@@edit'.format(
+                overridesItem.absolute_url_path()
+            ))
+            return
+        self.request.response.redirect('{}/view'.format(
             overridesItem.absolute_url_path()
         ))
-        return ""
+        return
 
 
-class EditManualOverrideForm(edit.DefaultEditForm):
+class ManualOverrideMixin(object):
+    def get_origin_for_scale(self, fullscalename):
+        """ Lookup HTML class for depending on authoritative origin for a particular scale """
+        fieldname = fullscalename.replace('/', '_')
+        config_name = fullscalename.split('/')[0]
+        if getattr(self.context, fieldname):
+            return 'direct_override'
+        if getattr(self.context, '{}_BASE'.format(config_name)):
+            return 'scaled_base_override'
+        else:
+            return 'zcml'
+
+
+class EditManualOverrideForm(edit.DefaultEditForm, ManualOverrideMixin):
     label = _(u"Edit Manual Logo and Icon Overrides")
     description = _(u"Site logos and icons set in ZCML are shown in " +
                     u"the left column. Overrides from this form are " +
                     u"shown in the right column")
 
     template = ViewPageTemplateFile('manual_override.pt')
-
-    def update(self):
-        # disable Plone's editable border
-        self.request.set('disable_border', True)
-
-        super(EditManualOverrideForm, self).update()
 
     def get_origin_for_scale(self, fullscalename):
         """ Lookup HTML class for depending on authoritative origin for a particular scale """
@@ -196,3 +209,7 @@ class EditManualOverrideForm(edit.DefaultEditForm):
             return 'scaled_base_override'
         else:
             return 'zcml'
+
+
+class ManualOverrideView(DefaultView, ManualOverrideMixin):
+    pass

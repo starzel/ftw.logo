@@ -4,7 +4,7 @@
 
   <permission
       id="ftw.logo.OverrideSiteLogosAndIcons"
-      title="Override site logos and icons"
+      title="ftw.logo: Override site logos and icons"
       />
 
 </configure>

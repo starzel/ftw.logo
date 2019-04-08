@@ -5,13 +5,17 @@
     xmlns:upgrade-step="http://namespaces.zope.org/ftw.upgrade"
     xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="ftw.logo">
 
     <five:registerPackage package="." initialize=".initialize" />
+    <i18n:registerTranslations directory="locales" />
 
     <include file="permissions.zcml" />
     <include package=".browser" />
     <include file="resources.zcml" />
+    <include file="lawgiver.zcml" zcml:condition="installed ftw.lawgiver" />
 
     <genericsetup:registerProfile
         name="default"
@@ -79,6 +83,13 @@
       for=".manual_override.IManualOverrides"
       name="edit"
       class=".manual_override.EditManualOverrideForm"
+      permission="ftw.logo.OverrideSiteLogosAndIcons" />
+
+    <browser:page
+      for=".manual_override.IManualOverrides"
+      name="view"
+      template="manual_override_view.pt"
+      class=".manual_override.ManualOverrideView"
       permission="ftw.logo.OverrideSiteLogosAndIcons" />
 
     <subscriber handler=".manual_override.overrides_changed" />
