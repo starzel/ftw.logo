@@ -5,4 +5,5 @@ Changelog
 1.0.0 (unreleased)
 --------------------
 
+- Add Plone 5.1 support. [busykoala]
 - Initial implementation.

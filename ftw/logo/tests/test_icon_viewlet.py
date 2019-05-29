@@ -1,7 +1,9 @@
 from ftw.logo.testing import get_etag_value_for
 from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
+from ftw.testing import IS_PLONE_5
 from unittest import skip
+from unittest2 import skipIf
 
 
 class TestIconViewlet(FunctionalTestCase):
@@ -17,8 +19,9 @@ class TestIconViewlet(FunctionalTestCase):
                 'meta[name="viewport"]'))
         )
 
+    @skipIf(IS_PLONE_5, 'The apple touch logo is not configurable in plone5')
     @browsing
-    def test_logo_viewlet_displays_relevant_metadata_in_header(self, browser):
+    def test_logo_viewlet_displays_relevant_metadata_in_header_part_one(self, browser):
         etag = get_etag_value_for(self.portal, self.request)
         browser.login().visit(self.portal)
 
@@ -31,6 +34,11 @@ class TestIconViewlet(FunctionalTestCase):
                 'sizes': x.attrib['sizes'],
             }, browser.css('link[rel="apple-touch-icon"]'))
         )
+
+    @browsing
+    def test_logo_viewlet_displays_relevant_metadata_in_header_part_two(self, browser):
+        etag = get_etag_value_for(self.portal, self.request)
+        browser.login().visit(self.portal)
 
         self.assertEqual(
             [

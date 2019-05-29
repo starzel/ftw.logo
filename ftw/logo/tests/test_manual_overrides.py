@@ -13,8 +13,6 @@ from zope.annotation.interfaces import IAnnotations
 import os
 
 
-GREEN = '#0f0'
-
 source_path = os.path.join(os.path.dirname(__file__), 'fixtures')
 blue_svg = os.path.join(source_path, 'blue.svg')
 red_svg = os.path.join(source_path, 'red.svg')
@@ -103,31 +101,41 @@ class TestManualOverrides(FunctionalTestCase):
             browser.fill({'SVG base logo': svg_file}).submit()
 
         # Check SVG image is set
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'red')
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
+                                  'rgba(255,0,0,1)')
         # Check conversion to PNG
-        img = self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png', 'red')
+        img = self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO',
+                                        'png', 'rgba(255,0,0,1)')
         self.assertEqual(50, img.height)
         # Check ZCML 'bypass' - base SVG should be shown
-        img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png', 'blue')
+        img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO',
+                                        'png', 'rgba(0,0,255,1)')
         self.assertEqual(50, img.height)
 
         # verify icons are unaffected (i.e. still derive from base icon)
-        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg', 'blue')
-        self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
-
-        # Test PNG override (Note: we don't test dimensions as they are not enforced)
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg',
+                                  'rgba(0,0,255,1)')
+        self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192',
+                                  'png', 'rgba(0,0,255,1)')
+        # Test PNG override
+        # (Note: we don't test dimensions as they are not enforced)
         overrides = self.portal[OVERRIDES_FIXED_ID]
         browser.login().visit(overrides, view='@@edit')
         with open(green_png) as png_file:
             browser.fill({'Mobile logo (PNG)': png_file}).submit()
-        self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png', GREEN)
+
+        self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO', 'png',
+                                  'rgba(0,255,0,1)')
 
         # Check ZCML 'bypass' - a scale of the base SVG should be shown
-        self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO', 'png',
+                                  'rgba(0,0,255,1)')
 
         # verify icons are unaffected (i.e. still derive from base icon)
-        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg', 'blue')
-        self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg',
+                                  'rgba(0,0,255,1)')
+        self.verify_correct_image(browser, '@@logo/icon/ANDROID_192X192',
+                                  'png', 'rgba(0,0,255,1)')
 
     @browsing
     def test_icon_overrides(self, browser):
@@ -140,33 +148,42 @@ class TestManualOverrides(FunctionalTestCase):
             browser.fill({'SVG base icon': svg_file}).submit()
 
         # Check SVG image is set
-        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg', 'red')
+        self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg',
+                                  'rgba(255,0,0,1)')
         # Check conversion to PNG
-        img = self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32', 'png', 'red')
+        img = self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32',
+                                        'png', 'rgba(255,0,0,1)')
         self.assertEqual(32, img.height)
         self.assertEqual(32, img.width)
         # Check ZCML 'bypass' - a scale of the base SVG should be shown
-        img = self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32', 'png', 'blue')
+        img = self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32',
+                                        'png', 'rgba(0,0,255,1)')
         self.assertEqual(32, img.height)
         self.assertEqual(32, img.width)
 
         # verify logos are unaffected (i.e. still derive from base logo)
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'blue')
-        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
+                                  'rgba(0,0,255,1)')
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png',
+                                  'rgba(0,0,255,1)')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
         overrides = self.portal[OVERRIDES_FIXED_ID]
         browser.login().visit(overrides, view='@@edit')
         with open(green_png) as png_file:
             browser.fill({'Favicon 32x32': png_file}).submit()
-        self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32', 'png', GREEN)
+        self.verify_correct_image(browser, '@@logo/icon/FAVICON_32X32', 'png',
+                                  'rgba(0,255,0,1)')
 
         # Check ZCML 'bypass' - base SVG should be shown
-        self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32',
+                                  'png', 'rgba(0,0,255,1)')
 
         # verify logos are unaffected (i.e. still derive from base logo)
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg', 'blue')
-        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png', 'blue')
+        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
+                                  'rgba(0,0,255,1)')
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png',
+                                  'rgba(0,0,255,1)')
 
     @browsing
     def test_form_validation(self, browser):
