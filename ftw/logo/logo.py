@@ -5,16 +5,16 @@ from ftw.logo.manual_override import BLOB_CACHEKEY
 from ftw.logo.manual_override import OVERRIDES_FIXED_ID
 from hashlib import sha256
 from plone.app.caching.interfaces import IETagValue
-from Products.CMFPlone.interfaces import IPloneSiteRoot
+from plone.app.layout.navigation.interfaces import INavigationRoot
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapter
 from zope.component import getMultiAdapter
-from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import implementer
 
 
 @implementer(ILogo)
-@adapter(IPloneSiteRoot, Interface)
+@adapter(INavigationRoot, Interface)
 class Logo(object):
 
     def __init__(self, context, request):
