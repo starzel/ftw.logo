@@ -12,6 +12,7 @@ Compatibility
 -------------
 
 Plone 4.3.x
+Plone 5.1.x
 
 Prerequisites
 =============
