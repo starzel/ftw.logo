@@ -95,7 +95,7 @@ The available scales are:
 
 
 "get_logo" scale
---------------
+-----------------
 
 The get_logo virtual scale returns either the BASE (svg from ZCML) or if available the overridden
 BASE or LOGO scale from the Dexterity content type.
@@ -126,7 +126,7 @@ First include the directive:
 
 .. code-block:: xml
 
-<configure
+   <configure
     ...
     xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
     ...
@@ -162,6 +162,8 @@ If you dont't have one you can use the one from this package, which is located i
 
 
 Change default height for logo and mobile scale by zcml:
+
+.. code-block:: xml
 
    <logo:logo base="resources/min.svg"
               height="200"

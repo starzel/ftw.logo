@@ -1,3 +1,4 @@
+import os
 from setuptools import setup, find_packages
 
 version = '1.0.0.dev0'
@@ -19,7 +20,9 @@ setup(
     name='ftw.logo',
     version=version,
     description='ftw.logo',
-    long_description=open('README.rst').read(),
+
+    long_description=open('README.rst').read() + '\n' + \
+        open(os.path.join('docs', 'HISTORY.txt')).read(),
 
     # Get more strings from
     # http://www.python.org/pypi?%3Aaction=list_classifiers
