@@ -32,7 +32,7 @@
                                 origin_class python:view.get_origin_for_scale(scale_name);"
                     tal:attributes="class origin_class">
                   <td class="zcml-image">
-                    <img tal:attributes="src string:${portal_url}/@@logo/z/${scale_name}" />
+                    <img tal:attributes="src string:${context/@@plone_portal_state/navigation_root_url}/@@logo/z/${scale_name}" />
                   </td>
                   <td class="widget">
                     <metal:field use-macro="context/@@ploneform-macros/field">
@@ -44,7 +44,7 @@
                          class="scaled-override-expl explanation">
                           Note: The image below is a scale of the 'SVG base override' above.
                       </p>
-                      <img tal:attributes="src string:${portal_url}/@@logo/${scale_name}" />
+                      <img tal:attributes="src string:${context/@@plone_portal_state/navigation_root_url}/@@logo/${scale_name}" />
                     </tal:if>
                   </td>
                 </tr>
