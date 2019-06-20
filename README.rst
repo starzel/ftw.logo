@@ -28,7 +28,8 @@ Two important points for developers.
 If you experience problems converting some svg's to png's, like getting a all transparent
 PNG. Install imagemagick with librsvg. Also don't install imagemagick version 7. Not gonna work.
 
-::
+.. code-block:: sh
+
      brew install imagemagick@6 --with-librsvg
      brew link imagemagick@6 --force
 
@@ -41,7 +42,7 @@ Installation
 
 - Add the package to your buildout configuration:
 
-::
+.. code-block:: ini
 
     [instance]
     eggs +=
