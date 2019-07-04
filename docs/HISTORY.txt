@@ -5,7 +5,7 @@ Changelog
 1.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use default configured workflow. [busykoala]
 
 
 1.0.1 (2019-06-21)
