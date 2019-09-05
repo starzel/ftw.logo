@@ -36,13 +36,18 @@ class TestManualOverrides(FunctionalTestCase):
 
         # test editor user can't use add form
         self.grant('Editor')
+        browser.login()
         with browser.expect_unauthorized():
-            browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
+            browser.visit(self.portal, view='@@logo-and-icon-overrides')
+
+        self.assertFalse(browser.visit(self.portal).css('#personaltools-override_logos'))
 
         # test site admin CAN use the overrides form
         self.grant('Site Administrator')
         browser.visit(self.portal, view='@@logo-and-icon-overrides')
         self.assertEqual(200, browser.status_code)
+
+        self.assertTrue(browser.visit(self.portal).css('#personaltools-override_logos'))
 
         # test editor user can't view the content type
         self.grant('Editor')
