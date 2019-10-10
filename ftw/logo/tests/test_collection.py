@@ -21,8 +21,8 @@ class TestCollecter(TestCase):
 
         self.assertEqual(len(component.scales), 3, 'Should store three scales')
         self.assertImage(component.get_scale('BASE'), 1, 1, 'svg')
-        self.assertImage(component.get_scale('LOGO'), 80, 80, 'png')
-        self.assertImage(component.get_scale('MOBILE_LOGO'), 50, 50, 'png')
+        self.assertIsNone(component.get_scale('LOGO'))
+        self.assertIsNone(component.get_scale('MOBILE_LOGO'))
 
     def test_all_icons_are_collected(self):
         component = IconConfig(base=source)
@@ -41,10 +41,10 @@ class TestCollecter(TestCase):
         component = LogoConfig(base=source, logo=img_source)
 
         self.assertEqual(len(component.scales), 3, 'Should store one scales')
-        self.assertImage(component.get_scale('LOGO'), 762, 80, 'png')
+        self.assertImage(component.get_scale('LOGO'), 200, 21, 'png')
 
         self.assertImage(component.get_scale('BASE'), 1, 1, 'svg')
-        self.assertImage(component.get_scale('MOBILE_LOGO'), 50, 50, 'png')
+        self.assertIsNone(component.get_scale('MOBILE_LOGO'))
 
     def test_primary_logo_scale(self):
         component = LogoConfig(base=source, logo=img_source,

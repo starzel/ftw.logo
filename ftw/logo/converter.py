@@ -15,14 +15,6 @@ def make_resizer(width=0, height=0, extension='png'):
     return resizer
 
 
-def make_transformer(width='', height='', extension='png'):
-    def transformer(img):
-        img = img.clone()
-        img.transform(resize='{}x{}'.format(width, height))
-        return Image(image=img.convert(extension))
-    return transformer
-
-
 def make_ico_converter():
     ICO_SCALES = [
         make_resizer(16, 16),
@@ -51,8 +43,8 @@ def flatten_scales(scales):
 
 SCALES = {
     'LOGOS': {
-        'LOGO':             make_transformer(height=80),
-        'MOBILE_LOGO':      make_transformer(height=50),
+        'LOGO':             make_raw(),
+        'MOBILE_LOGO':      make_raw(),
         'BASE':             make_raw(),
     },
     'ICONS': {

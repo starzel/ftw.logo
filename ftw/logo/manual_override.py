@@ -1,7 +1,6 @@
 from ftw.logo import _
 from ftw.logo.logoconfig import get_cachekey_from_blob
 from ftw.logo.logoconfig import IconConfigOverride
-from ftw.logo.logoconfig import LogoConfigOverride
 from hashlib import sha256
 from plone.dexterity.browser.view import DefaultView
 from plone.dexterity.browser import edit
@@ -22,7 +21,6 @@ import transaction
 
 OVERRIDES_FIXED_ID = 'ftw-logo-overrides'
 # Annotations keys
-LOGO_OVERRIDES_KEY = 'ftw.logo.logo_overrides'
 ICON_OVERRIDES_KEY = 'ftw.logo.icon_overrides'
 BLOB_CACHEKEY = 'ftw.logo.blob_cachekey'
 OVERRIDES_KEY_PATTERN = 'ftw.logo.{}_overrides'
@@ -128,8 +126,6 @@ class IManualOverrides(model.Schema):
 @adapter(IManualOverrides, IObjectModifiedEvent)
 def overrides_changed(override_object, event):
     annotations = IAnnotations(override_object)
-    if override_object.logo_BASE:
-        annotations[LOGO_OVERRIDES_KEY] = LogoConfigOverride(override_object.logo_BASE)
     if override_object.icon_BASE:
         annotations[ICON_OVERRIDES_KEY] = IconConfigOverride(override_object.icon_BASE)
 

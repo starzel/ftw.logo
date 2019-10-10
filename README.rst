@@ -5,8 +5,10 @@ Introduction
 ============
 
 Plone extension providing smart logo handling.
-Based on an svg Logo or Icon the extension is able to produce all kinds
+Based on a svg Icon the extension is able to produce all kinds
 of scales such as apple touch icons or android PWA logos.
+
+The Logo is either a PNG or SVG.
 
 Compatibility
 -------------
@@ -66,10 +68,8 @@ Or start an instance by running ``bin/instance fg``.
 Scales
 ======
 
-Basically there are just logo and icon scales.
+There are just icon scales.
 The logo scales are mostly used on the top left and can have
-any dimensions. The converter creates a ``logo`` and ``mobile_logo`` from the
-base logo which has to be an svg file.
 The icon scales are used for ``apple_touch_icons``, ``favicons`` or ``android PWA icons``.
 The base icon must be square, and the scaled icons will also if course be square.
 In summary we need two different SVG source files. One with an arbitary ratio
@@ -82,7 +82,7 @@ The available scales are:
 - LOGOS
    - LOGO
    - MOBILE_LOGO
-   - BASE
+   - BASE (SVG)
    - get_logo (virtual)
 - ICONS
    - APPLE_TOUCH_ICON
@@ -162,19 +162,10 @@ Please remember a base svg is required anyway. If you can't supply one, simply p
 If you dont't have one you can use the one from this package, which is located in the resources folder. It's called min.svg. Also set the primary_logo_scale to "logo", since ftw.logo always prefers the svg over all other scales.
 
 
-Change default height for logo and mobile scale by zcml:
-
-.. code-block:: xml
-
-   <logo:logo base="resources/min.svg"
-              height="200"
-              mobile_height="30" />
-
-
 Logo View
 =========
 
-All logos and icons can be accessed through the logo browser view.
+All logos and icons can be accessed through thi logo browser view.
 The URL consists of the browser view name ``@@logo`` followed by the type of the
 image and the actual scale.
 

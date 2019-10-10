@@ -1,5 +1,4 @@
 from ftw.logo.converter import convert
-from ftw.logo.converter import make_transformer
 from ftw.logo.converter import SCALES
 from ftw.logo.image import Image
 from ftw.logo.interfaces import IIconConfig
@@ -40,13 +39,6 @@ class AbstractConfig(object):
         if 'favicon' in kwargs:
             self.favicon = Image(filename=kwargs['favicon'])
 
-        if 'height' in kwargs:
-            # Update by reference the transformer with the new height
-            SCALES['LOGOS']['LOGO'] = make_transformer(height=kwargs['height'])
-        if 'mobile_height' in kwargs:
-            # Update by reference the transformer with the new height
-            SCALES['LOGOS']['MOBILE_LOGO'] = make_transformer(height=kwargs['mobile_height'])
-
         self.cachekey = get_cachekey_from_blob(
             self.base.make_blob(),
             self.logo and self.logo.make_blob() or None,
@@ -81,8 +73,7 @@ class LogoConfig(AbstractConfig):
             if getattr(self, scale.lower(), None):
                 self.add_scale(scale, convert(getattr(self, scale.lower()), scale))
             else:
-                self.add_scale(scale, convert(self.base, scale))
-
+                self.add_scale(scale, None)
 
 class IconConfig(AbstractConfig):
     """Icon config entry.

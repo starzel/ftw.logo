@@ -37,10 +37,6 @@ class TestConverter(TestCase):
         self.assertImage(
             convert(base, 'APPLE_TOUCH_ICON'), 180, 180, 'png')
 
-    def test_converts_png_fixed_aspect_ratio(self):
-        self.assertImage(
-            convert(base, 'LOGO'), 80, 80, 'png')
-
     def test_converts_multipart_images(self):
         img = convert(base, 'FAVICON')
         self.assertEqual(img['sequence_length'], 3,

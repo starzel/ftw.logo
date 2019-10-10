@@ -88,6 +88,7 @@ class TestManualOverrides(FunctionalTestCase):
         browser.logout()
         browser.visit(self.portal, view=view)
         self.assertEqual(200, browser.status_code)
+        import pdb; pdb.set_trace()
         try:
             im = Image(blob=browser.contents, format=expected_format)
         except CorruptImageError:    # pragma: no cover
@@ -120,9 +121,9 @@ class TestManualOverrides(FunctionalTestCase):
         # Check SVG image is set
         self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
                                   'red')
-        # Check conversion to PNG
+        # Returns base logo as fallback
         img = self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO',
-                                        'png', 'red')
+                                        'svg', 'red')
         self.assertEqual(50, img.height)
         # Check ZCML 'bypass' - base SVG should be shown
         img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO',
@@ -181,8 +182,6 @@ class TestManualOverrides(FunctionalTestCase):
         # verify logos are unaffected (i.e. still derive from base logo)
         self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
                                   'blue')
-        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png',
-                                  'blue')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
         overrides = self.portal[OVERRIDES_FIXED_ID]
@@ -198,8 +197,6 @@ class TestManualOverrides(FunctionalTestCase):
 
         # verify logos are unaffected (i.e. still derive from base logo)
         self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
-                                  'blue')
-        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'png',
                                   'blue')
 
     @browsing

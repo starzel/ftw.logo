@@ -89,6 +89,9 @@ class LogoView(BrowserView):
 
     def show_config_scale(self, config):
         scale = config.get_scale(self.scale)
+        if not scale:
+            scale = config.get_scale('BASE')
+
         response = self.request.response
         iterator = StringIOStreamIterator(scale['data'])
         extension = scale.get('extension') or scale['format'].lower()

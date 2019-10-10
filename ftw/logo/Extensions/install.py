@@ -1,6 +1,5 @@
 from ftw.logo.manual_override import BLOB_CACHEKEY
 from ftw.logo.manual_override import ICON_OVERRIDES_KEY
-from ftw.logo.manual_override import LOGO_OVERRIDES_KEY
 from Products.CMFCore.utils import getToolByName
 from StringIO import StringIO
 from zope.annotation.interfaces import IAnnotations
@@ -30,7 +29,7 @@ def clean_up_content_annotations(portal):
     for b in brains:
         override_obj = b.getObject()
         annotations = IAnnotations(override_obj)
-        for key in (ICON_OVERRIDES_KEY, LOGO_OVERRIDES_KEY, BLOB_CACHEKEY):
+        for key in (ICON_OVERRIDES_KEY, BLOB_CACHEKEY):
             if key in annotations:
                 del annotations[key]
                 print >> output, "Cleaned up annotation {} on {}".format(key, b.getPath())

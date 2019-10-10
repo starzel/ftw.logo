@@ -49,9 +49,8 @@ class TestLogoView(FunctionalTestCase):
         self.verify_image_format(browser, '@@logo/icon/BASE', 'svg')
 
     @browsing
-    def test_logo_scale(self, browser):
-        im = self.verify_image_format(browser, '@@logo/logo/MOBILE_LOGO', 'png')
-        self.assertEqual(50, im.height)
+    def test_logo_scale_uses_base_as_fallback(self, browser):
+        self.verify_image_format(browser, '@@logo/logo/MOBILE_LOGO', 'svg')
 
     @browsing
     def test_icon_scale(self, browser):
@@ -129,27 +128,3 @@ class TestLogoView(FunctionalTestCase):
         view.publishTraverse(view.request, u"get_logo")
         view()
         self.assertEquals('LOGO', view.scale)
-
-    def test_change_logo_height(self):
-        self.layer['load_zcml_string']('''
-        <configure
-            xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
-            i18n_domain="my.package"
-            package="ftw.logo.tests">
-            <logo:logo base="{}" height="100" mobile_height="30" />
-        </configure>
-        '''.format(custom))
-
-        # Simulate publishTraverse of '@@logo/logo/get_logo'
-        view = self.portal.restrictedTraverse('@@logo')
-        view.publishTraverse(view.request, u"logo")
-        view.publishTraverse(view.request, u"LOGO")
-        img = Image(blob=view())
-        self.assertEquals(100, img.width)
-
-        # Simulate publishTraverse of '@@logo/logo/get_logo'
-        view = self.portal.restrictedTraverse('@@logo')
-        view.publishTraverse(view.request, u"logo")
-        view.publishTraverse(view.request, u"MOBILE_LOGO")
-        img = Image(blob=view())
-        self.assertEquals(30, img.width)
