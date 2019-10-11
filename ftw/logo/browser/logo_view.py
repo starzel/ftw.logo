@@ -1,5 +1,5 @@
-from ftw.logo.converter import SCALES
 from ftw.logo.converter import flatten_scales
+from ftw.logo.converter import SCALES
 from ftw.logo.interfaces import IIconConfig
 from ftw.logo.interfaces import ILogo
 from ftw.logo.interfaces import ILogoConfig
@@ -44,18 +44,12 @@ class LogoView(BrowserView):
         elif self.config and name in flatten_scales(SCALES):
             self.scale = name
             return self
-        elif self.config and name == 'get_logo':
-            self.scale = name
-            return self
         else:
             raise NotFound()
 
     def __call__(self):
         if not self.config or not self.scale:
             raise BadRequest()
-
-        if self.scale == 'get_logo':
-            return self.handle_get_logo()
 
         check_overrides = not self.zcml_only
         return ((check_overrides and self.get_dx_overridden_image()) or
@@ -68,7 +62,7 @@ class LogoView(BrowserView):
         # check if requested scale has been overridden and return it
         field_name = '{}_{}'.format(self.config_name, self.scale)
         field = getattr(overridesItem, field_name)
-        if not field:
+        if not field and self.config_name == 'icon':
             # check if base logo/icon  has been overridden, then return the transformed BASE logo/icon
             base_field_name = '{}_BASE'.format(self.config_name)
             if getattr(overridesItem, base_field_name):
@@ -90,7 +84,7 @@ class LogoView(BrowserView):
     def show_config_scale(self, config):
         scale = config.get_scale(self.scale)
         if not scale:
-            scale = config.get_scale('BASE')
+            scale = config.get_scale('LOGO')
 
         response = self.request.response
         iterator = StringIOStreamIterator(scale['data'])
@@ -108,32 +102,3 @@ class LogoView(BrowserView):
             # http://stackoverflow.com/a/3001556/880628
             response.setHeader('Cache-Control', 'public, max-age=31536000')
         return iterator
-
-    def handle_get_logo(self):
-        if self.has_dx_logo() and not self.has_dx_base():
-            self.scale = 'LOGO'
-            return self.get_dx_overridden_image()
-        elif self.has_dx_base():
-            self.scale = 'BASE'
-            return self.get_dx_overridden_image()
-        else:
-            self.scale = 'BASE'
-
-            config = getMultiAdapter(
-                (self.context, self.request), ILogo).get_config(self.config)
-            if config.primary_logo_scale:
-                self.scale = config.primary_logo_scale.upper()
-
-            return self.get_zcml_configured_image()
-
-    def has_dx_logo(self):
-        overridesItem = self.context.get(OVERRIDES_FIXED_ID)
-        if not overridesItem:
-            return False
-        return bool(overridesItem.logo_LOGO)
-
-    def has_dx_base(self):
-        overridesItem = self.context.get(OVERRIDES_FIXED_ID)
-        if not overridesItem:
-            return False
-        return bool(overridesItem.logo_BASE)

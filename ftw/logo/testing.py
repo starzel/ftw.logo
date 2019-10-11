@@ -64,7 +64,7 @@ class BlueBaseLogoLayer(PloneSandboxLayer):
              '  <include package="z3c.autoinclude" file="meta.zcml" />'
              '  <includePlugins package="plone" />'
              '  <includePluginsOverrides package="plone" />'
-             '  <logo:logo base="{0}"/>'
+             '  <logo:logo logo="{0}"/>'
              '  <logo:icon base="{0}"/>'
              '</configure>').format(blue_svg),
             context=configurationContext)

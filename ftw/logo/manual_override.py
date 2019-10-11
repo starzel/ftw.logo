@@ -44,6 +44,15 @@ def png_file_only(value):
     return True
 
 
+def svg_or_png(value):
+    if value.contentType in ['image/png', 'image/svg+xml']:
+        raise Invalid(
+            u"This image must be a PNG or SVG file " +
+            u"({} supplied)".format(value.contentType)
+        )
+    return True
+
+
 class IManualOverrides(model.Schema):
 
     # Note: The field names are carefully constructed as one of:
@@ -52,24 +61,16 @@ class IManualOverrides(model.Schema):
     # The form (manual_override.pt) depends on this to find the ZCML
     # default image
 
-    logo_BASE = NamedBlobImage(
-        title=_(u"SVG base logo"),
-        description=_(u"Overriding the base logo will generate an override "
-                      u"for BOTH logos below if not already set."),
-        required=False,
-        constraint=svg_file_only,
-    )
-
     logo_LOGO = NamedBlobImage(
-        title=_(u"Standard (desktop) logo (PNG)"),
+        title=_(u"Standard (desktop) logo (PNG or SVG)"),
         required=False,
-        constraint=png_file_only,
+        constraint=svg_or_png,
     )
 
     logo_MOBILE_LOGO = NamedBlobImage(
         title=_(u"Mobile logo (PNG)"),
         required=False,
-        constraint=png_file_only,
+        constraint=svg_or_png,
     )
 
     icon_BASE = NamedBlobImage(
@@ -181,7 +182,7 @@ class ManualOverrideMixin(object):
         config_name = fullscalename.split('/')[0]
         if getattr(self.context, fieldname):
             return 'direct_override'
-        if getattr(self.context, '{}_BASE'.format(config_name)):
+        if hasattr(self.context, '{}_BASE'.format(config_name)):
             return 'scaled_base_override'
         else:
             return 'zcml'
@@ -194,18 +195,6 @@ class EditManualOverrideForm(edit.DefaultEditForm, ManualOverrideMixin):
                     u"shown in the right column")
 
     template = ViewPageTemplateFile('manual_override.pt')
-
-    def get_origin_for_scale(self, fullscalename):
-        """ Lookup HTML class for depending on authoritative origin for a particular scale """
-        fieldname = fullscalename.replace('/', '_')
-        config_name = fullscalename.split('/')[0]
-        if getattr(self.context, fieldname):
-            return 'direct_override'
-        if getattr(self.context, '{}_BASE'.format(config_name)):
-            return 'scaled_base_override'
-        else:
-            return 'zcml'
-
 
 class ManualOverrideView(DefaultView, ManualOverrideMixin):
     pass

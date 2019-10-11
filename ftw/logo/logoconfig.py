@@ -20,33 +20,29 @@ def get_cachekey_from_blob(*args):
 
 class AbstractConfig(object):
 
-    base = None
     logo = None
-    mobile = None
+    mobile_logo = None
     favicon = None
-    primary_logo_scale = None
+
+    required_attr = 'logo'
 
     def __init__(self, **kwargs):
-        if 'base' not in kwargs:
-            raise ConfigurationError('A base svg is required')
+        if self.required_attr not in kwargs:
+            raise ConfigurationError('A logo svg/png is required')
 
-        self.base = Image(filename=kwargs['base'])
+        setattr(self, self.required_attr, Image(filename=kwargs[self.required_attr]))
 
-        if 'logo' in kwargs:
-            self.logo = Image(filename=kwargs['logo'])
         if 'mobile' in kwargs:
-            self.mobile = Image(filename=kwargs['mobile'])
+            self.mobile_logo = Image(filename=kwargs['mobile'])
         if 'favicon' in kwargs:
             self.favicon = Image(filename=kwargs['favicon'])
 
         self.cachekey = get_cachekey_from_blob(
-            self.base.make_blob(),
-            self.logo and self.logo.make_blob() or None,
-            self.mobile and self.mobile.make_blob() or None,
+            getattr(self, self.required_attr).make_blob(),
+            self.mobile_logo and self.mobile_logo.make_blob() or None,
             self.favicon and self.favicon.make_blob() or None,)
         self.scales = {}
         self.collect_scales()
-        self.set_primary_logo_scale(**kwargs)
 
     def add_scale(self, name, scale):
         self.scales[name] = scale
@@ -56,10 +52,6 @@ class AbstractConfig(object):
 
     def get_scale(self, name):
         return self.scales[name]
-
-    def set_primary_logo_scale(self, **kwargs):
-        if 'primary_logo_scale' in kwargs:
-            self.primary_logo_scale = kwargs['primary_logo_scale']
 
 
 class LogoConfig(AbstractConfig):
@@ -75,9 +67,12 @@ class LogoConfig(AbstractConfig):
             else:
                 self.add_scale(scale, None)
 
+
 class IconConfig(AbstractConfig):
     """Icon config entry.
     """
+
+    required_attr = 'base'
 
     implements(IIconConfig)
 
@@ -86,13 +81,13 @@ class IconConfig(AbstractConfig):
             if getattr(self, scale.lower(), None):
                 self.add_scale(scale, convert(getattr(self, scale.lower()), scale))
             else:
-                self.add_scale(scale, convert(self.base, scale))
+                self.add_scale(scale, convert(getattr(self, self.required_attr), scale))
 
 
 class AbstractConfigOverride(AbstractConfig):
 
     def __init__(self, blobImage):
-        base_img = Image(blob=blobImage.data, format='svg')
+        base_img = Image(blob=blobImage.data)
         self.cachekey = get_cachekey_from_blob(blobImage.data)
         self.scales = {}
         self.collect_scales(base_img)

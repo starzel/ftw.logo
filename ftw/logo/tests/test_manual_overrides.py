@@ -88,7 +88,6 @@ class TestManualOverrides(FunctionalTestCase):
         browser.logout()
         browser.visit(self.portal, view=view)
         self.assertEqual(200, browser.status_code)
-        import pdb; pdb.set_trace()
         try:
             im = Image(blob=browser.contents, format=expected_format)
         except CorruptImageError:    # pragma: no cover
@@ -116,19 +115,11 @@ class TestManualOverrides(FunctionalTestCase):
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
         self.assertEqual(200, browser.status_code)
         with open(red_svg) as svg_file:
-            browser.fill({'SVG base logo': svg_file}).submit()
+            browser.fill({'Standard (desktop) logo (PNG or SVG)': svg_file}).submit()
 
         # Check SVG image is set
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'svg',
                                   'red')
-        # Returns base logo as fallback
-        img = self.verify_correct_image(browser, '@@logo/logo/MOBILE_LOGO',
-                                        'svg', 'red')
-        self.assertEqual(50, img.height)
-        # Check ZCML 'bypass' - base SVG should be shown
-        img = self.verify_correct_image(browser, '@@logo/z/logo/MOBILE_LOGO',
-                                        'png', 'blue')
-        self.assertEqual(50, img.height)
 
         # verify icons are unaffected (i.e. still derive from base icon)
         self.verify_correct_image(browser, '@@logo/icon/BASE', 'svg',
@@ -179,8 +170,8 @@ class TestManualOverrides(FunctionalTestCase):
         self.assertEqual(32, img.height)
         self.assertEqual(32, img.width)
 
-        # verify logos are unaffected (i.e. still derive from base logo)
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
+        # verify logos are unaffected (i.e. still derive from logo logo)
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'svg',
                                   'blue')
 
         # Test PNG override (Note: we don't test dimensions as they are not enforced)
@@ -195,18 +186,14 @@ class TestManualOverrides(FunctionalTestCase):
         self.verify_correct_image(browser, '@@logo/z/icon/FAVICON_32X32',
                                   'png', 'blue')
 
-        # verify logos are unaffected (i.e. still derive from base logo)
-        self.verify_correct_image(browser, '@@logo/logo/BASE', 'svg',
+        # verify logos are unaffected (i.e. still derive from logo logo)
+        self.verify_correct_image(browser, '@@logo/logo/LOGO', 'svg',
                                   'blue')
 
     @browsing
     def test_form_validation(self, browser):
         self.grant('Site Administrator')
-
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
-        with open(green_png) as png_file:
-            browser.fill({'SVG base logo': png_file}).submit()
-        self.assertIn('This image must be a SVG file (image/png supplied)', browser.contents)
 
         overrides = self.portal[OVERRIDES_FIXED_ID]
         browser.login().visit(overrides, view='@@edit')
@@ -222,8 +209,7 @@ class TestManualOverrides(FunctionalTestCase):
         # add some overrides
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
         with open(red_svg) as svg_file:
-            browser.fill({'SVG base logo': svg_file,
-                          'SVG base icon': svg_file}).submit()
+            browser.fill({'SVG base icon': svg_file}).submit()
 
         # Check we have some annotations
         override_obj = self.portal[OVERRIDES_FIXED_ID]

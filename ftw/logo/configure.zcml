@@ -89,7 +89,7 @@
       permission="zope2.Public"
       for="plone.app.layout.navigation.interfaces.INavigationRoot" />
 
-    <logo:logo base="resources/logo.svg" />
+    <logo:logo logo="resources/logo.svg" />
     <logo:icon base="resources/icon.svg" />
 
     <browser:page

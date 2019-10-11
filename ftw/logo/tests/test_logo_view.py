@@ -42,7 +42,7 @@ class TestLogoView(FunctionalTestCase):
 
     @browsing
     def test_logo_view(self, browser):
-        self.verify_image_format(browser, '@@logo/logo/BASE', 'svg')
+        self.verify_image_format(browser, '@@logo/logo/LOGO', 'svg')
 
     @browsing
     def test_icon_view(self, browser):
@@ -73,7 +73,7 @@ class TestLogoView(FunctionalTestCase):
             xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
             i18n_domain="my.package"
             package="ftw.logo.tests">
-            <logo:logo base="{}" />
+            <logo:logo logo="{}" />
         </configure>
         '''.format(custom))
         after = get_etag_value_for(self.portal, self.request)
@@ -81,50 +81,3 @@ class TestLogoView(FunctionalTestCase):
         self.assertNotEqual(
             before,
             after)
-
-    @browsing
-    def test_special_get_logo_scale_name_returns_svg_by_default(self, browser):
-        self.verify_image_format(browser, '@@logo/logo/get_logo', 'svg')
-        self.grant('Site Administrator')
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
-
-        with open(png) as green_png:
-            browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
-            self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
-
-    @browsing
-    def test_special_get_logo_scale_name_returns_uploaded_png(self, browser):
-        self.verify_image_format(browser, '@@logo/logo/get_logo', 'svg')
-        self.grant('Site Administrator')
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
-
-        with open(png) as green_png:
-            browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
-            self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
-
-    @browsing
-    def test_special_get_logo_scale_name_returns_uploaded_svg(self, browser):
-        self.verify_image_format(browser, '@@logo/logo/get_logo', 'svg')
-        self.grant('Site Administrator')
-        browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
-
-        with open(png) as green_png:
-            browser.fill({'Standard (desktop) logo (PNG)': green_png}).submit()
-            self.verify_image_format(browser, '@@logo/logo/get_logo', 'png')
-
-    def test_primary_logo_scale(self):
-        self.layer['load_zcml_string']('''
-        <configure
-            xmlns:logo="https://namespaces.4teamwork.ch/ftw.logo"
-            i18n_domain="my.package"
-            package="ftw.logo.tests">
-            <logo:logo base="{}" primary_logo_scale="logo" />
-        </configure>
-        '''.format(custom))
-
-        # Simulate publishTraverse of '@@logo/logo/get_logo'
-        view = self.portal.restrictedTraverse('@@logo')
-        view.publishTraverse(view.request, u"logo")
-        view.publishTraverse(view.request, u"get_logo")
-        view()
-        self.assertEquals('LOGO', view.scale)

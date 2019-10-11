@@ -82,8 +82,6 @@ The available scales are:
 - LOGOS
    - LOGO
    - MOBILE_LOGO
-   - BASE (SVG)
-   - get_logo (virtual)
 - ICONS
    - APPLE_TOUCH_ICON
    - FAVICON_32X32
@@ -137,25 +135,24 @@ Example:
 
 .. code-block:: xml
 
-   <logo:logo base="logo.svg" />
+   <logo:logo logo="logo.svg" />
 
 The next block will override the previous config.
 
 .. code-block:: xml
 
-   <logo:logo base="custom_logo.svg" layer="your.product.interfaces.IYourProductLayer" />
+   <logo:logo logo="custom_logo.svg" layer="your.product.interfaces.IYourProductLayer" />
 
 
-It's also possible to define a pre scaled image for `logo`, `mobile` and `favicon`.
+It's also possible to define a pre `favicon`.
 
 .. code-block:: xml
 
-   <logo:logo base="resources/min.svg"
-              logo="tests/fixtures/logo.png"
+   <logo:logo logo="tests/fixtures/logo.png"
               mobile="mobile.png"
-              primary_logo_scale="logo" />
+              />
 
-   <logo:icon base="icon.svg" favicon="favicon.ico" />
+   <logo:icon logo="icon.svg" favicon="favicon.ico" />
 
 
 Please remember a base svg is required anyway. If you can't supply one, simply put in a transparent empty svg.

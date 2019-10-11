@@ -32,23 +32,19 @@ class TestZCML(TestCase):
     layer = META_ZCML
 
     def test_logo_component(self):
-        self.load_zcml('<logo:logo base="{}" />'.format(logo))
+        self.load_zcml('<logo:logo logo="{}" />'.format(logo))
         registry = getMultiAdapter((None, None), ILogoConfig)
         verifyObject(ILogoConfig, registry)
 
-    def test_logo_component_with_other_image_attr(self):
-        self.load_zcml('<logo:logo base="{}" logo="{}" />'.format(logo, logo_img))
-        registry = getMultiAdapter((None, None), ILogoConfig)
-        verifyObject(ILogoConfig, registry)
-
-        self.load_zcml('<logo:logo base="{}" mobile="{}" />'.format(logo, mobile_img))
+    def test_logo_component_with_mobile_image_attr(self):
+        self.load_zcml('<logo:logo logo="{}" mobile="{}" />'.format(logo, mobile_img))
         registry = getMultiAdapter((None, None), ILogoConfig)
         verifyObject(ILogoConfig, registry)
 
     def test_logo_component_is_overwriteable(self):
         self.load_zcml(
-            '<logo:logo base="{}" />'.format(logo),
-            '<logo:logo base="{}"'.format(custom),
+            '<logo:logo logo="{}" />'.format(logo),
+            '<logo:logo logo="{}"'.format(custom),
             '  layer="ftw.logo.tests.test_zcml.IDummyLayer" />')
         registry = getMultiAdapter((object(), DummyRequest()), ILogoConfig)
         verifyObject(ILogoConfig, registry)

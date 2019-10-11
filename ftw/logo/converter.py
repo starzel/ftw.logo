@@ -45,7 +45,6 @@ SCALES = {
     'LOGOS': {
         'LOGO':             make_raw(),
         'MOBILE_LOGO':      make_raw(),
-        'BASE':             make_raw(),
     },
     'ICONS': {
         'APPLE_TOUCH_ICON': make_resizer(180, 180),
