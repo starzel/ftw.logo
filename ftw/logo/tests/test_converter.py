@@ -1,6 +1,6 @@
 from ftw.logo.converter import convert
 from ftw.logo.image import Image
-from unittest2 import TestCase
+from unittest import TestCase
 import os
 
 
