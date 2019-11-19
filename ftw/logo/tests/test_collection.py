@@ -1,4 +1,4 @@
-from unittest2 import TestCase
+from unittest import TestCase
 from ftw.logo.logoconfig import LogoConfig
 from ftw.logo.logoconfig import IconConfig
 import os

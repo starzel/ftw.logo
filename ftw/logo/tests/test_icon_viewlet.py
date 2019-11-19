@@ -3,7 +3,7 @@ from ftw.logo.tests import FunctionalTestCase
 from ftw.testbrowser import browsing
 from ftw.testing import IS_PLONE_5
 from unittest import skip
-from unittest2 import skipIf
+from unittest import skipIf
 
 
 class TestIconViewlet(FunctionalTestCase):
