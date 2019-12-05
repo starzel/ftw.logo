@@ -6,6 +6,7 @@ Changelog
 ------------------
 
 - Fix user action permission. [mathias.leimgruber]
+- Fix test using the same file twice. [busykoala]
 
 
 1.0.2 (2019-07-05)
