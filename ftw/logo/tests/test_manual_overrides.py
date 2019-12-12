@@ -224,9 +224,10 @@ class TestManualOverrides(FunctionalTestCase):
 
         # add some overrides
         browser.login().visit(self.portal, view='@@logo-and-icon-overrides')
-        with open(red_svg) as svg_file:
-            browser.fill({'SVG base logo': svg_file,
-                          'SVG base icon': svg_file}).submit()
+        with open(red_svg) as svg_file1:
+            with open(red_svg) as svg_file2:
+                browser.fill({'SVG base logo': svg_file1,
+                              'SVG base icon': svg_file2}).submit()
 
         # Check we have some annotations
         override_obj = self.portal[OVERRIDES_FIXED_ID]
