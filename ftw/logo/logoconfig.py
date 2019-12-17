@@ -7,7 +7,7 @@ from ftw.logo.interfaces import ILogoConfig
 from hashlib import sha256
 from textwrap import wrap
 from zope.configuration.exceptions import ConfigurationError
-from zope.interface import implements
+from zope.interface import implementer
 
 
 def get_cachekey_from_blob(*args):
@@ -69,12 +69,11 @@ class AbstractConfig(object):
         if 'primary_logo_scale' in kwargs:
             self.primary_logo_scale = kwargs['primary_logo_scale']
 
-
+@implementer(ILogoConfig)
 class LogoConfig(AbstractConfig):
     """Logo config entry.
     """
 
-    implements(ILogoConfig)
 
     def collect_scales(self):
         for scale in SCALES['LOGOS']:
@@ -84,11 +83,11 @@ class LogoConfig(AbstractConfig):
                 self.add_scale(scale, convert(self.base, scale))
 
 
+@implementer(IIconConfig)
 class IconConfig(AbstractConfig):
     """Icon config entry.
     """
 
-    implements(IIconConfig)
 
     def collect_scales(self):
         for scale in SCALES['ICONS']:
@@ -107,22 +106,22 @@ class AbstractConfigOverride(AbstractConfig):
         self.collect_scales(base_img)
 
 
+@implementer(ILogoConfig)
 class LogoConfigOverride(AbstractConfigOverride):
     """Logo config (TTW) overrides.
     """
 
-    implements(ILogoConfig)
 
     def collect_scales(self, base_img):
         for scale in SCALES['LOGOS']:
             self.add_scale(scale, convert(base_img, scale))
 
 
+@implementer(IIconConfig)
 class IconConfigOverride(AbstractConfigOverride):
     """Icon config (TTW) overrides.
     """
 
-    implements(IIconConfig)
 
     def collect_scales(self, base_img):
         for scale in SCALES['ICONS']:
